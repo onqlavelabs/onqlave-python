@@ -1,0 +1,1 @@
+# This is a list of constants for log messages
