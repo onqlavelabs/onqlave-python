@@ -1,4 +1,6 @@
-
+from logger.logger import OnqlaveLogging
+from keymanager.csprng import CSPRNG
+from keymanager.id_generator import IDService
 class Encryption:
     """A class that models the encryption services with 2 main groups of features:
     - Encrypt/Decrypt data blocks
@@ -16,8 +18,13 @@ class Encryption:
         x_ch_cha_key_factory 
 
         """
+        self._logger = OnqlaveLogging().getLogger()
+        # random service
+        self._csprng = CSPRNG()
+        # id gen
+        self._id_generator = IDService()
         self._key_mamanger = key_manager
-        self._logger = logger
+        
         self._operations = operations
 
     # impl setters & getters
