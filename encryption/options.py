@@ -13,7 +13,7 @@ class ArxOption:
     def __init__(self, arx_url: str) -> None:
         self._arx_url = self._check_url(arx_url)
         
-    def _check_url(self,url: str) -> str | None:
+    def _check_url(self,url: str) -> str:
         return url
 
     def set_arx_url(self,url:str) -> None:
