@@ -5,10 +5,10 @@ class CSPRNG:
         pass
 
     def get_random_bytes(self, size: int) -> None:
-        pass
+        raise NotImplementedError
 
-    def get_random_uint32(self) -> c_uint32
-        pass
+    def get_random_uint32(self) -> c_uint32:
+        raise NotImplementedError
 
     def get_random_reader() -> any:
-        pass
+        raise NotImplementedError
