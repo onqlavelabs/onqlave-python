@@ -4,7 +4,7 @@ from utils.hasher import Hasher
 from logger.logger import OnqlaveLogging
 from connection.connection import Connection
 from factories.rsa_ssa_pkcs1_sha_factory import RSASSAPKCS1SHAKeyFactory
-from csprng import CSPRNG
+from keymanager.random_service import CSPRNG
 from onqlave_types.types import RsaSsapkcs12048sha256f4
 from .operations.rsa_ssa_pkcs1_sha_operation import RsaSsaPkcs1Sha2562048KeyOperation
 class Configuration:

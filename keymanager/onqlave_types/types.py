@@ -33,6 +33,12 @@ HashTypeSHA256      = HashType(3)
 HashTypeSHA512      = HashType(4)
 HashTypeSHA224      = HashType(5)
 
+class AEAD:
+    def encrypt(plain_text, associated_data: bytearray) -> bytearray:
+        raise NotImplementedError
+    
+    def decrypt(cipher_text, associated_data: bytearray) -> bytearray:
+        raise NotImplementedError
 class KeyOperation:
     def get_format(self):
         raise NotImplementedError
@@ -40,6 +46,23 @@ class KeyOperation:
     def get_factory(self):
         raise NotImplementedError
         
+
+class KeyData:
+    def get_value() -> bytearray:
+        raise NotImplementedError
+    
+    def from_value(data: bytearray):
+        raise NotImplementedError
+    
+    def get_type_url() -> string:
+        raise NotImplementedError
+    
+    def get_key_material_type():
+        raise NotImplementedError
+    
+    def get_version() -> c_uint32:
+        raise NotImplementedError
+    
 class Key:
     def key_id(self):
         raise NotImplementedError
@@ -47,10 +70,20 @@ class Key:
     def operation(self):
         raise NotImplementedError
     
-    def data(self):
-        raise 
+    def data(self) -> KeyData:
+        raise NotImplementedError
     
 class KeyFormat:
     def size(self) -> c_uint32:
         raise NotImplementedError
         
+
+class KeyFactory:
+    def new_key(operation: KeyOperation) -> Key:
+        raise NotImplementedError
+    
+    def new_key_from_data(operation: KeyOperation, key_data: bytearray) -> Key:
+        raise NotImplementedError
+    
+    def primitive(key: Key) -> AEAD:
+        raise NotImplementedError

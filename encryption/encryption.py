@@ -1,6 +1,6 @@
 from logger.logger import OnqlaveLogging
-from keymanager.csprng import CSPRNG
-from keymanager.id_generator import IDService
+from keymanager.random_service import CSPRNG
+from keymanager.id_service import IDService
 class Encryption:
     """A class that models the encryption services with 2 main groups of features:
     - Encrypt/Decrypt data blocks
