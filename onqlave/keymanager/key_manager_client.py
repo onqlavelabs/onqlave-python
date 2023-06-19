@@ -1,12 +1,14 @@
+import logging
+
 from credentials.credentials import Credential
-from ..connection.client import RetrySettings
+from connection.client import RetrySettings
 from utils.hasher import Hasher
-from logger.logger import OnqlaveLogging
+# from logger.logger import OnqlaveLogging
 from connection.connection import Connection
-from factories.rsa_ssa_pkcs1_sha_factory import RSASSAPKCS1SHAKeyFactory
+from keymanager.factories.rsa_ssa_pkcs1_sha_factory import RSASSAPKCS1SHAKeyFactory
 from keymanager.random_service import CSPRNG
-from onqlave_types.types import RsaSsapkcs12048sha256f4
-from .operations.rsa_ssa_pkcs1_sha_operation import RsaSsaPkcs1Sha2562048KeyOperation
+from keymanager.onqlave_types.types import RsaSsapkcs12048sha256f4
+from keymanager.operations.rsa_ssa_pkcs1_sha_operation import RsaSsaPkcs1Sha2562048KeyOperation
 class Configuration:
     def __init__(
             self, credentials: Credential, retry_settings: RetrySettings, arx_url: str, arx_id: str) -> None:
@@ -17,10 +19,10 @@ class Configuration:
 
 
 class KeyManager:
-    def __init__(self, random_service: CSPRNG) -> None:
+    def __init__(self, option: Configuration ,random_service: CSPRNG) -> None:
         # hasher:
         self._hasher = Hasher()
-        self._logger = OnqlaveLogging()
+        self._logger = logging.getLogger(self.__class__.__name__)
         self._index = "some value related to the arx url"
         self._config = {}
         self._http_client = Connection() # should pass all the params

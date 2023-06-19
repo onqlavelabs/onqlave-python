@@ -5,9 +5,9 @@ from ..random_service import CSPRNG
 from ..onqlave_types.types import KeyOperation,Key,KeyFormat
 
 class XChaCha20Poly1305KeyFactory:
-    def __init__(self) -> None:
-        self._id_service = IDService()
-        self._random_service = CSPRNG()
+    def __init__(self, id_service: IDService, random_service: CSPRNG) -> None:
+        self._id_service = id_service
+        self._random_service = random_service
 
     def new_key(self, operation: KeyOperation):
         raise NotImplementedError

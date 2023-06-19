@@ -1,12 +1,13 @@
 from keymanager.id_service import IDService
 from ctypes import c_uint32
 from keymanager.random_service import CSPRNG
-from onqlave_types.types import KeyOperation, Key, KeyFormat
-from primitives.aes_gcm_aead import validate_aes_key_size
-class AesGcmKeyFactory:
-    def __init__(self) -> None:
-        self._id_service = IDService()
-        self._random_service = CSPRNG()
+from keymanager.onqlave_types.types import KeyOperation, Key, KeyFormat
+from keymanager.primitives.aes_gcm_aead import validate_aes_key_size
+
+class AEADGCMKeyFactory:
+    def __init__(self, id_service: IDService, random_service: CSPRNG) -> None:
+        self._id_service = id_service
+        self._random_service = random_service
         # do something here to create new key ???
 
     def new_key(self,operation: KeyOperation):

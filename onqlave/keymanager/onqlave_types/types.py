@@ -25,7 +25,10 @@ Aesgcm256 = "aes-gcm-256"
 XChacha20poly1305 = "xcha-cha-20-poly-1305"
 RsaSsapkcs12048sha256f4 = "RSA_SSA_PKCS1_2048_SHA256_F4"
 
-HashType = type('HashType', c_int32, {})
+# HashType = type('HashType', (c_int32), {})
+class HashType(c_uint32):
+    pass
+
 HashTypeUNKNOWNHASH = HashType(0)
 HashTypeSHA1        = HashType(1)
 HashTypeSHA384      = HashType(2)
@@ -54,7 +57,7 @@ class KeyData:
     def from_value(data: bytearray):
         raise NotImplementedError
     
-    def get_type_url() -> string:
+    def get_type_url() -> str:
         raise NotImplementedError
     
     def get_key_material_type():
