@@ -1,6 +1,6 @@
-from ..random_service import CSPRNG
+from keymanager.random_service import CSPRNG
 from ctypes import c_int32
-from onqlave_types.types import HashTypeName
+from keymanager.onqlave_types.types import HashTypeName
 from hashlib import sha1,sha224,sha256,sha384,sha512
 
 class RSASSAPKCS1SHAKeyFactory:
