@@ -43,8 +43,13 @@ class Encryption:
         index = arx_option.get_arx_url().rindex("/") # do sth to find the last index of the "/"
         arx_url = arx_option.get_arx_url()[:index]
         arx_id = arx_option.get_arx_url()[index+1:]
-        self._option = Configuration(credentials=credential_option,retry_settings=retry_setting,arx_url=arx_url, arx_id=arx_id)
-        self._key_mamanger = KeyManager(option=self._option,random_service=self._csprng)
+        self._option = Configuration(
+            credentials=credential_option,
+            retry_settings=retry_setting,
+            arx_url=arx_url, 
+            arx_id=arx_id
+        )
+        self._key_mamanger = KeyManager(configuration=self._option,random_service=self._csprng)
         
         self._aead_gcm_key_factory = AEADGCMKeyFactory(id_service=self._id_generator, random_service=self._csprng)
         self._xchcha_key_factory = XChaCha20Poly1305KeyFactory(id_service=self._id_generator, random_service=self._csprng)
@@ -62,7 +67,7 @@ class Encryption:
         """Return the algorithm and primitives of the encrypt operation
         """
         # get the edk, dk, algo from Onqlave keymanager
-
+        self._key_mamanger.fetch_encryption_key()
         #
         pass
 

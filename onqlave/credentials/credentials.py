@@ -4,6 +4,6 @@ class Credential:
         self._signing_key = self._validate_key(signing_key)
         self._secret_key = self._validate_key(secret_key)
 
-    def _validate_key(self, key: str) -> str | None:
+    def _validate_key(self, key: str) -> str:
         return None if key == "" else key
             
