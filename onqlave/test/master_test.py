@@ -24,5 +24,10 @@ assert type(arx_option.get_arx_url()) == str
 credential_option = Credential(access_key="accesss_key",signing_key="signing_key",secret_key="secret_key")
 retry_option = RetrySettings(count=1,wait_time=1,max_wait_time=2)
 
-encryption_engine = Encryption(debug_option=debug_option,arx_option=arx_option,credential_option=credential_option,retry_setting=retry_option)
+encryption_engine = Encryption(
+    debug_option=debug_option,
+    arx_option=arx_option,
+    credential_option=credential_option,
+    retry_setting=retry_option
+)
 print("Hello Onqlave")

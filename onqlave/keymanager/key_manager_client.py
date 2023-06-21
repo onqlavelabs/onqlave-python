@@ -6,7 +6,7 @@ from connection.client import RetrySettings
 from utils.hasher import Hasher
 # from logger.logger import OnqlaveLogging
 from contracts.requests.requests import EncryptionOpenRequest
-from connection.connection import Connection
+from connection.connection import Connection,Configuration
 from keymanager.factories.rsa_ssa_pkcs1_sha_factory import RSASSAPKCS1SHAKeyFactory
 from keymanager.random_service import CSPRNG
 from keymanager.onqlave_types.types import RsaSsapkcs12048sha256f4
@@ -17,13 +17,13 @@ from errors.errors import OnqlaveError
 ENCRYPT_RESOURCE_URL  = "oe2/keymanager/encrypt"
 DECRYPT_RESOURCE_URL  = "oe2/keymanager/decrypt"
 
-class Configuration:
-    def __init__(
-            self, credentials: Credential, retry_settings: RetrySettings, arx_url: str, arx_id: str) -> None:
-        self._credentials = credentials
-        self._arx_id = arx_id
-        self._arx_url = arx_url
-        self._retry_settings = retry_settings
+# class Configuration:
+#     def __init__(
+#             self, credentials: Credential, retry_settings: RetrySettings, arx_url: str, arx_id: str) -> None:
+#         self._credentials = credentials
+#         self._arx_id = arx_id
+#         self._arx_url = arx_url
+#         self._retry_settings = retry_settings
 
 
 class KeyManager:
@@ -35,6 +35,7 @@ class KeyManager:
         self._config = configuration
         self._http_client = Connection(
             configuration=self._config,
+            # configuration=configuration,
             hasher=self._hasher,
             logger=self._logger
         ) # should pass all the params

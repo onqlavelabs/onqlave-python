@@ -1,5 +1,9 @@
-from contracts.requests.requests import OnqlaveRequest
 import logging
+import requests
+import time 
+from datetime import datetime
+from contracts.requests.requests import OnqlaveRequest
+from messages import messages
 class RetrySettings:
     def __init__(
             self, 
@@ -26,14 +30,42 @@ class Client:
             retry_setting: RetrySettings,
             logger: any, 
     ) -> None:
-        self._logger = logger # init Onqlave logger here
-        self._client = client # init a http client here
+        self._logger = logging.getLogger() # init Onqlave logger here
+        # self._client = requests # init a http client here
         self._retry_setting = retry_setting # init a retry setting instance here
 
-    def post(self, resource: str, body: OnqlaveRequest): # return a byte array & error
+    def post(
+            self, 
+            resource: str, 
+            request_body: OnqlaveRequest,
+            headers: dict        
+    ): # return a byte array & error
         """Send the body data to the resource URL
         """
-        raise NotImplementedError
+        operation = "Http"
+        self._logger.debug(messages.HTTP_OPERATION_STARTED,operation,exc_info=1)
+        start = datetime.utcnow()
+
+        response = requests.post(
+            url=""+resource,
+            headers=headers,
+            body=request_body
+        ) # find the host:port
+        # do something to retry the request
+        if response.status_code == 429:
+            pass # return onqlaveerrors.SDKerrorcode
+        elif response.status_code >= 400:
+            pass # return some errors
+
+        return response.json()
         
-    def do_request_with_retry(self) -> None:
-        raise NotImplementedError
+    def do_request_with_retry(self,resource,body) -> None:
+        response = requests.Response()
+        for i in range(0,self._retry_setting._count):
+            response = requests.post(url=""+resource,body=body)
+            if response.status_code < 500:
+                return response
+            time.sleep(self._retry_setting._max_wait_time)
+
+        return response # should also return the error
+
