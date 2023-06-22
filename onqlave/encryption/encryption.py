@@ -63,7 +63,7 @@ class Encryption:
     # impl setters & getters
 
     # init encrypt/decrypt operations
-    def init_encrypt_operation(self) -> None:
+    def init_encrypt_operation(self, operation: str) -> None:
         """Return the algorithm and primitives of the encrypt operation
         """
         # get the edk, dk, algo from Onqlave keymanager
@@ -76,6 +76,9 @@ class Encryption:
 
     # encrypt/decrypt
     def encrypt(self) -> None:
+        #
+        operation = "Encrypt"
+        self.init_encrypt_operation(operation=operation)
         pass
 
     def derypt(self) -> None:
