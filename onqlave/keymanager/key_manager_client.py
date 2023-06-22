@@ -50,7 +50,7 @@ class KeyManager:
         start = datetime.utcnow()
         request = EncryptionOpenRequest()
         # log debug with message = fetching encryption key operation
-        data = self._http_client._client.post(resource=ENCRYPT_RESOURCE_URL,body=request)
+        data = self._http_client.post(resource=ENCRYPT_RESOURCE_URL,body=request)
         # validate data
         
         #get the response

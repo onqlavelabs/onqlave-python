@@ -30,4 +30,6 @@ encryption_engine = Encryption(
     credential_option=credential_option,
     retry_setting=retry_option
 )
+
+encryption_engine.encrypt()
 print("Hello Onqlave")

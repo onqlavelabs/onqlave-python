@@ -47,7 +47,7 @@ class Client:
         start = datetime.utcnow()
 
         response = requests.post(
-            url=""+resource,
+            url=resource,
             headers=headers,
             body=request_body
         ) # find the host:port

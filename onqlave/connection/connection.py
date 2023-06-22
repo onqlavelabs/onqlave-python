@@ -1,7 +1,25 @@
+import calendar
+from datetime import datetime
+
 from credentials.credentials import Credential
 from connection.client import RetrySettings,Client
+from contracts.requests.requests import OnqlaveRequest
 from utils.hasher import Hasher
 
+OnqlaveAPIKey         = "ONQLAVE-API-KEY"
+OnqlaveContent        = "Content-Type"
+OnqlaveHost           = "ONQLAVE-HOST"
+OnqlaveVersion        = "ONQLAVE-VERSION"
+OnqlaveSignature      = "ONQLAVE-SIGNATURE"
+OnqlaveDigest         = "ONQLAVE-DIGEST"
+OnqlaveArx            = "ONQLAVE-ARX"
+OnqlaveAgent          = "User-Agent"
+OnqlaveRequestTime    = "ONQLAVE-REQUEST-TIME"
+OnqlaveContentLength  = "ONQLAVE-CONTEXT-LEN"
+
+ServerType        = "Onqlave/0.1"
+Version           = "0.1"
+Oonqlave_Content  = "application/json"
 
 class Configuration:
 
@@ -35,5 +53,46 @@ class Connection:
         self._logger = logger
         self._configuration = configuration
 
-    # def post(self) -> None:
-    #     pass
+    def post(self,resource: str, body: OnqlaveRequest) -> None:
+        operation = "Post"
+        start = datetime.utcnow()
+        # log the operation
+        url_string = self._configuration._arx_url + resource
+        arx_id = self._configuration._arx_id
+
+        digest = self._hasher.digest(body)
+
+        headers_to_sign = {
+            "OnqlaveAPIKey": self._configuration._credentials._access_key,
+            "OnqlaveArx": arx_id,
+            "OnqlaveHost": self._configuration._arx_url,
+            "OnqlaveAgent": ServerType,
+            "OnqlaveContentLength": len(body.get_content()),
+            "OnqlaveDigest": digest,
+            "OnqlaveVersion": Version
+        }
+        signature = self._hasher.sign(headers_to_sign,self._configuration._credentials._signing_key)
+        print(f"signed: {signature}") # need some error check
+        headers = {
+            "OnqlaveContent": Oonqlave_Content,
+            "OnqlaveAPIKey": self._configuration._credentials._access_key,
+            "OnqlaveArx": arx_id,
+            "OnqlaveHost": self._configuration._arx_url,
+            "OnqlaveAgent": ServerType,
+            "OnqalveRequestTime":calendar.timegm(datetime.utcnow().timetuple()),
+            "OnqlaveContentLength": len(body.get_content()),
+            "OnqlaveDigest": digest,
+            "OnqlaveVersion": Version,
+            "OnqlaveSignature": signature
+        }
+        response = self._client.post(url_string,request_body=body, headers=headers)
+        
+        return response # need to handle errors later
+
+# {
+# 	"access_key": "onq.JlnL5YDsC8O6NperEMNdf0DM7vaYHhl5",
+# 	"arx_url": "https://gcp.community.serverless.au.dp0.onqlave.com/cluster--Qludg9OeHwhtGGbd8LSPB",
+# 	"server_signing_key": "onq.GZDANwPQ2VY2XzfaxEq7eq9mfPoUjHKv",
+# 	"server_secret_key": "onq.26j0WfMlQnPUYGdcyceq6a1raJd8JacJKltWe6Towlox91zlGiupL7FtdYUl0Rr6PKl3e3gS7oYU3364Wt8r4Q9KRD4zwSMuCQI9aJbsptPGYTnnBOURjjORPpVSsake",
+# 	"client_key": ""
+# }
