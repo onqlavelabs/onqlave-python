@@ -45,18 +45,18 @@ class Client:
         operation = "Http"
         self._logger.debug(messages.HTTP_OPERATION_STARTED,operation,exc_info=1)
         start = datetime.utcnow()
-
+        json_body = request_body._json
         response = requests.post(
             url=resource,
             headers=headers,
-            body=request_body
+            json=json_body
         ) # find the host:port
         # do something to retry the request
         if response.status_code == 429:
             pass # return onqlaveerrors.SDKerrorcode
         elif response.status_code >= 400:
             pass # return some errors
-
+        print(f"response = {response}")
         return response.json()
         
     def do_request_with_retry(self,resource,body) -> None:
