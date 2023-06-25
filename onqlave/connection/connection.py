@@ -57,17 +57,18 @@ class Connection:
         operation = "Post"
         start = datetime.utcnow()
         # log the operation
-        url_string = self._configuration._arx_url + resource
+        url_string = self._configuration._arx_url + "/" + resource
         arx_id = self._configuration._arx_id
 
         digest = self._hasher.digest(body)
+        print(f"digest = {digest}")
 
         headers_to_sign = {
             "OnqlaveAPIKey": self._configuration._credentials._access_key,
             "OnqlaveArx": arx_id,
             "OnqlaveHost": self._configuration._arx_url,
             "OnqlaveAgent": ServerType,
-            "OnqlaveContentLength": len(body.get_content()),
+            "OnqlaveContentLength": str(len(body.get_content())),
             "OnqlaveDigest": digest,
             "OnqlaveVersion": Version
         }
@@ -79,12 +80,13 @@ class Connection:
             "OnqlaveArx": arx_id,
             "OnqlaveHost": self._configuration._arx_url,
             "OnqlaveAgent": ServerType,
-            "OnqalveRequestTime":calendar.timegm(datetime.utcnow().timetuple()),
-            "OnqlaveContentLength": len(body.get_content()),
+            "OnqlaveRequestTime":str(calendar.timegm(datetime.utcnow().timetuple())),
+            "OnqlaveContentLength": str(len(body.get_content())),
             "OnqlaveDigest": digest,
             "OnqlaveVersion": Version,
             "OnqlaveSignature": signature
         }
+        print(f"arx_id={arx_id}")
         response = self._client.post(url_string,request_body=body, headers=headers)
         
         return response # need to handle errors later
