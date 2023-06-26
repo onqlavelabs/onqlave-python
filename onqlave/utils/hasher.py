@@ -8,11 +8,10 @@ class Hasher:
     def digest(self, body_data) -> None:
         """hash the body_data using sha-512() then encode with base64
         """
-        digest_hash = sha512()
-        # digest_hash.update(body_data)
-        # digest_hash.digest()
-        print("hashing the body content here ....")
-        pass
+        hashing_function = sha512()
+        hashing_function.update(body_data)
+        digest = hashing_function.digest()
+        return f"SHA512={base64.b64encode(digest).decode()}"
 
     def sign(self,header_data:dict, signing_key) -> None:
         """pre process + sign the header data with a signing key using hmac-sha512
