@@ -1,15 +1,17 @@
 import hmac
 import base64
 from hashlib import sha512
+
+from contracts.requests.requests import OnqlaveRequest
 class Hasher:
     def __init__(self) -> None:
         pass
 
-    def digest(self, body_data) -> None:
+    def digest(self, body_data: OnqlaveRequest) -> None:
         """hash the body_data using sha-512() then encode with base64
         """
         hashing_function = sha512()
-        hashing_function.update(body_data)
+        hashing_function.update(body_data.get_content().encode('utf-8'))
         digest = hashing_function.digest()
         return f"SHA512={base64.b64encode(digest).decode()}"
 

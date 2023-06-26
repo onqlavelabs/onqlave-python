@@ -64,27 +64,27 @@ class Connection:
         print(f"digest = {digest}")
 
         headers_to_sign = {
-            "OnqlaveAPIKey": self._configuration._credentials._access_key,
-            "OnqlaveArx": arx_id,
-            "OnqlaveHost": self._configuration._arx_url,
-            "OnqlaveAgent": ServerType,
-            "OnqlaveContentLength": str(len(body.get_content())),
-            "OnqlaveDigest": digest,
-            "OnqlaveVersion": Version
+            OnqlaveAPIKey: self._configuration._credentials._access_key,
+            OnqlaveArx: arx_id,
+            OnqlaveHost: self._configuration._arx_url,
+            OnqlaveAgent: ServerType,
+            OnqlaveContentLength: str(len(body.get_content())),
+            OnqlaveDigest: digest,
+            OnqlaveVersion: Version
         }
         signature = self._hasher.sign(headers_to_sign,self._configuration._credentials._signing_key)
         print(f"signed: {signature}") # need some error check
         headers = {
-            "OnqlaveContent": Oonqlave_Content,
-            "OnqlaveAPIKey": self._configuration._credentials._access_key,
-            "OnqlaveArx": arx_id,
-            "OnqlaveHost": self._configuration._arx_url,
-            "OnqlaveAgent": ServerType,
-            "OnqlaveRequestTime":str(calendar.timegm(datetime.utcnow().timetuple())),
-            "OnqlaveContentLength": str(len(body.get_content())),
-            "OnqlaveDigest": digest,
-            "OnqlaveVersion": Version,
-            "OnqlaveSignature": signature
+            OnqlaveContent: Oonqlave_Content,
+            OnqlaveAPIKey: self._configuration._credentials._access_key,
+            OnqlaveArx: arx_id,
+            OnqlaveHost: self._configuration._arx_url,
+            OnqlaveAgent: ServerType,
+            OnqlaveRequestTime:str(calendar.timegm(datetime.utcnow().timetuple())),
+            OnqlaveContentLength: str(len(body.get_content())),
+            OnqlaveDigest: digest,
+            OnqlaveVersion: Version,
+            OnqlaveSignature: signature
         }
         print(f"arx_id={arx_id}")
         response = self._client.post(url_string,request_body=body, headers=headers)
