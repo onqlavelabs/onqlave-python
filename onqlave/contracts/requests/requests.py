@@ -8,7 +8,7 @@ class OnqlaveRequest():
     
     def get_content(self): # return []byte, error
         """convert to JSON encoding"""
-        pass
+        return json.dumps(self._json)
     
 class EncryptionOpenRequest(OnqlaveRequest):
     def __init__(self,body_data: dict):
