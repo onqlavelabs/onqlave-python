@@ -15,19 +15,14 @@ class Hasher:
         pass
 
     def sign(self,header_data:dict, signing_key) -> None:
-        """sign the header data with a signing key using hmac-sha512
-        lowercase all the header data before signing
+        """pre process + sign the header data with a signing key using hmac-sha512
         """
-        header_names = []
-        for header_name, header_value in header_data.items():
-            header_names.append(header_name)
-
-        header_names = sorted(header_names)
-        signing_key_as_byte_array = bytearray()
-        signing_key_as_byte_array.extend(map(ord,signing_key))
-        signature_hash = hmac.new(key=signing_key_as_byte_array,digestmod=sha512)
+        header_names = sorted([header_name for header_name,value in header_data.items()])
+        signing_function = hmac.new(signing_key.encode('utf-8'),None,sha512)
+        
         for header_name in header_names:
-            signature_hash.digest()
+            input_str = f"{header_name.lower()}:{header_data[header_name]}"
+            signing_function.update(input_str.encode('utf-8'))
 
-        print("signing something here....")
-        pass
+        digest = signing_function.digest()
+        return f"HMAC-SHA512={str(base64.b64encode(digest).decode())}"
