@@ -50,7 +50,7 @@ class Client:
             url=resource,
             headers=headers,
             json=json_body
-        ) # find the host:port
+        )
         # do something to retry the request
         if response.status_code == 429:
             pass # return onqlaveerrors.SDKerrorcode

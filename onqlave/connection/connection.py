@@ -88,7 +88,7 @@ class Connection:
         }
         print(f"arx_id={arx_id}")
         response = self._client.post(url_string,request_body=body, headers=headers)
-        
+        print(response)
         return response # need to handle errors later
 
 # {
