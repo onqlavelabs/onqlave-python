@@ -1,9 +1,11 @@
+from hashlib import sha1,sha224,sha256,sha384,sha512
 from keymanager.random_service import CSPRNG
 from ctypes import c_int32
-from keymanager.onqlave_types.types import HashTypeName
-from hashlib import sha1,sha224,sha256,sha384,sha512
-
-class RSASSAPKCS1SHAKeyFactory:
+from keymanager.onqlave_types.types import HashTypeName,KeyFactory
+from keymanager.onqlave_types.types import AEAD, Key,KeyOperation
+from keymanager.operations.rsa_ssa_pkcs1_sha_operation import RsaSsaPkcs1Sha2562048KeyOperation
+from keymanager.primitives.rsa_ssa_pkcs1_sha import RSASSAPKCS1SHA
+class RSASSAPKCS1SHAKeyFactory():
     def __init__(self, random_service: CSPRNG) -> None:
         self._random_service = random_service
     
@@ -18,9 +20,6 @@ class RSASSAPKCS1SHAKeyFactory:
             raise ValueError()
         
         return hash_function,hash_id
-    
-    def primitive(self) -> None:
-        raise NotImplementedError
     
     def _get_hash_function(self, hash: str) -> any:
         if hash == "SHA1":
@@ -37,7 +36,8 @@ class RSASSAPKCS1SHAKeyFactory:
             return None
 
     def _get_hash_type(self, hash_type: c_int32) -> str:
-        return HashTypeName[hash_type]
+        print(f"hash_type = {hash_type.value}")
+        return HashTypeName[hash_type.value]
     
     def _get_hash_id(self,hash_algorithm: str) -> int:
         if hash_algorithm == "SHA256":
@@ -53,4 +53,21 @@ class RSASSAPKCS1SHAKeyFactory:
         if hash_algorithm in ["SHA256","SHA384","SHA512"]:
             return True
         return False
+    
+    def primitive(self, operation:RsaSsaPkcs1Sha2562048KeyOperation) -> RSASSAPKCS1SHA:
+        format = operation.get_format()
+        hash_func, hash_id = self.rsa_hash_func(
+            self._get_hash_type(format.get_hash())
+        )
+        # check if the above procedure has errors
+        ret = RSASSAPKCS1SHA(
+            hash_function=hash_func,
+            hash_id=hash_id,
+            random_service=self._random_service
+        )
+        # check if cannot create *ret
+        return ret
+        
+    
+    
     

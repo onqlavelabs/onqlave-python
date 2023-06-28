@@ -33,7 +33,7 @@ class DecryptionOpenResponse:
         self._dk = data_key
         self._error_response = None
 
-class EncryptionOperationResponse:
+class EncryptionOpenResponse:
     def __init__(
             self,
             wrapping_key: WrappingKey,

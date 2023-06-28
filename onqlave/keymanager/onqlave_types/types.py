@@ -88,5 +88,5 @@ class KeyFactory:
     def new_key_from_data(operation: KeyOperation, key_data: bytearray) -> Key:
         raise NotImplementedError
     
-    def primitive(key: Key) -> AEAD:
+    def primitive(key: Key) -> any:
         raise NotImplementedError

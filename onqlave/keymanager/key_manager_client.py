@@ -52,15 +52,50 @@ class KeyManager:
         # log debug with message = fetching encryption key operation
         data = self._http_client.post(resource=ENCRYPT_RESOURCE_URL,body=request)
         # validate data
+        # these thing needs to be replaced with onqlave response object
+        edk = data['data_key']['encrypted_data_key']
+        wdk = data['data_key']['wrapped_data_key']
+        epk = data['wrapping_key']['encrypted_private_key']
+        fp = data['wrapping_key']['key_fingerprint']
+        wrapping_algorithm = data['security_model']['wrapping_algo']
+        algorithm = data['security_model']['algo']
         
+        # unwrap the key
+        dk = self.unwrap_key(
+            wrapping_algorithm=wrapping_algorithm,
+            operation=operation,
+            wdk=wdk,
+            epk=epk,
+            fp=fp,
+            password=bytearray(self._config._credentials._secret_key,'utf-8')
+        )
         #get the response
-
+        print(f"hooray, dk = {dk}")
         # decode data including: edk, wdk, epk, fp
-        return (1,2,'c',OnqlaveError())
+        return (edk,dk,algorithm,OnqlaveError())
     
     def fetch_decryption_key(self):
         operation  = "FetchDecryptionKey"
         raise NotImplementedError
     
-    def unwrap_key(self):
-        raise NotImplementedError
+    def unwrap_key(
+            self, 
+            wrapping_algorithm: str, 
+            operation: str, 
+            wdk: bytearray, 
+            epk: bytearray,
+            fp: bytearray,
+            password: bytearray
+    ):
+        wrapping_operation = self._operations[wrapping_algorithm]
+        if wrapping_operation is None:
+            return None
+        factory = wrapping_operation.get_factory()
+        primitive = factory.primitive(wrapping_operation)
+        # check if primitive assignment had some errors
+        dk = primitive.unwrap_key(
+            wdk=wdk,epk=epk,fp=fp,password=password
+        )
+        return dk
+        
+
