@@ -25,8 +25,8 @@ class RSASSAPKCS1SHA:
         password: bytearray
     ) -> bytearray:
         # private_key = PrivateKey()
-        block, rem = PEM.decode(epk)
-        if len(rem) == 0:
+        block, rem, operation_performed = PEM.decode(epk)
+        if len(rem) != 0:
             private_key = load_pem_private_key(
                 block,
                 password=password

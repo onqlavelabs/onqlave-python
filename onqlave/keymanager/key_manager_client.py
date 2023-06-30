@@ -1,8 +1,9 @@
 import logging
+import base64
 from datetime import datetime
 
-from credentials.credentials import Credential
-from connection.client import RetrySettings
+# from credentials.credentials import Credential
+# from connection.client import RetrySettings
 from utils.hasher import Hasher
 # from logger.logger import OnqlaveLogging
 from contracts.requests.requests import EncryptionOpenRequest
@@ -53,10 +54,10 @@ class KeyManager:
         data = self._http_client.post(resource=ENCRYPT_RESOURCE_URL,body=request)
         # validate data
         # these thing needs to be replaced with onqlave response object
-        edk = data['data_key']['encrypted_data_key']
-        wdk = data['data_key']['wrapped_data_key']
-        epk = data['wrapping_key']['encrypted_private_key']
-        fp = data['wrapping_key']['key_fingerprint']
+        edk = base64.b64decode(data['data_key']['encrypted_data_key']).decode('ISO-8859-1')
+        wdk = base64.b64decode(data['data_key']['wrapped_data_key']).decode('ISO-8859-1')
+        epk = base64.b64decode(data['wrapping_key']['encrypted_private_key']).decode('ISO-8859-1')
+        fp = base64.b64decode(data['wrapping_key']['key_fingerprint']).decode('ISO-8859-1')
         wrapping_algorithm = data['security_model']['wrapping_algo']
         algorithm = data['security_model']['algo']
         
