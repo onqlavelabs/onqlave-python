@@ -29,6 +29,12 @@ RsaSsapkcs12048sha256f4 = "RSA_SSA_PKCS1_2048_SHA256_F4"
 class HashType(c_uint32):
     pass
 
+class KeyMaterialType(int):
+    pass
+
+class KeyID(c_uint32):
+    pass
+
 HashTypeUNKNOWNHASH = HashType(0)
 HashTypeSHA1        = HashType(1)
 HashTypeSHA384      = HashType(2)
@@ -82,11 +88,11 @@ class KeyFormat:
         
 
 class KeyFactory:
-    def new_key(operation: KeyOperation) -> Key:
+    def new_key(self, operation: KeyOperation) -> Key:
         raise NotImplementedError
     
-    def new_key_from_data(operation: KeyOperation, key_data: bytearray) -> Key:
+    def new_key_from_data(self, operation: KeyOperation, key_data: bytearray) -> Key:
         raise NotImplementedError
     
-    def primitive(key: Key) -> any:
+    def primitive(self, key: Key) -> any:
         raise NotImplementedError

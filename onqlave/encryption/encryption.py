@@ -67,7 +67,13 @@ class Encryption:
         """Return the algorithm and primitives of the encrypt operation
         """
         # get the edk, dk, algo from Onqlave keymanager
-        self._key_mamanger.fetch_encryption_key()
+        edk, dk, algorithm, err = self._key_mamanger.fetch_encryption_key()
+        ops = self._operations[algorithm]
+        
+        factory = ops.get_factory()
+        key = factory.new_key_from_data(ops,dk)
+
+        primitive = factory.get_primitive()
         #
         pass
 
