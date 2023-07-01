@@ -1,5 +1,7 @@
 from rsa import PrivateKey
-from Crypto.IO import PEM
+from Crypto.IO import PEM 
+from Crypto.PublicKey import RSA
+from Crypto.Cipher import PKCS1_OAEP
 
 from cryptography.hazmat.primitives.serialization import load_pem_private_key
 from cryptography.hazmat.primitives.asymmetric import rsa,padding
@@ -20,30 +22,19 @@ class RSASSAPKCS1SHA:
     def unwrap_key(
         self,
         wdk: bytearray,
-        epk: bytearray,
+        epk: str,
         fp: bytearray,
-        password: bytearray
+        password: str,
     ) -> bytearray:
-        # private_key = PrivateKey()
-        block, rem, operation_performed = PEM.decode(epk)
-        if len(rem) != 0:
-            private_key = load_pem_private_key(
-                block,
-                password=password
-            )
-            dk = private_key.decrypt(
-            wdk,
-            padding.OAEP(
-                mgf=padding.MGF1(
-                    algorithm=self._hash_function),
-                algorithm=self._hash_function,
-                label=None
-            ))
-            return dk
-        
-        else:
-            print("wrapping key format error")
-            return None
+        private_key = RSA.import_key(epk,password)
+        pkcs1_oaep = PKCS1_OAEP.new(
+            key=private_key,
+            hashAlgo=self._hash_function,
+            randfunc=self._random_service.get_random_bytes
+        )
+        data_key = pkcs1_oaep.decrypt(wdk)
+        print(data_key)
+        return data_key
         # if no error happens
         
 

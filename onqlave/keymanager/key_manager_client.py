@@ -28,6 +28,10 @@ DECRYPT_RESOURCE_URL  = "oe2/keymanager/decrypt"
 
 
 class KeyManager:
+    """Performs key handling operations at client slide, including:
+    - Fetch encryption/decryption key
+    - Unwrap the fetched encryption/decryption key
+    """
     def __init__(self, configuration: Configuration ,random_service: CSPRNG) -> None:
         # hasher:
         self._hasher = Hasher()
@@ -47,6 +51,9 @@ class KeyManager:
 
     
     def fetch_encryption_key(self):
+        """Fetch the encryption key from a defined Arx by parsing 
+        the data_key, wrapping_key, security_model from the response
+        """
         operation  = "FetchEncryptionKey"
         start = datetime.utcnow()
         request = EncryptionOpenRequest(body_data={})
@@ -54,10 +61,10 @@ class KeyManager:
         data = self._http_client.post(resource=ENCRYPT_RESOURCE_URL,body=request)
         # validate data
         # these thing needs to be replaced with onqlave response object
-        edk = base64.b64decode(data['data_key']['encrypted_data_key']).decode('ISO-8859-1')
-        wdk = base64.b64decode(data['data_key']['wrapped_data_key']).decode('ISO-8859-1')
+        edk = base64.b64decode(data['data_key']['encrypted_data_key'])
+        wdk = base64.b64decode(data['data_key']['wrapped_data_key'])
         epk = base64.b64decode(data['wrapping_key']['encrypted_private_key']).decode('ISO-8859-1')
-        fp = base64.b64decode(data['wrapping_key']['key_fingerprint']).decode('ISO-8859-1')
+        fp = base64.b64decode(data['wrapping_key']['key_fingerprint'])
         wrapping_algorithm = data['security_model']['wrapping_algo']
         algorithm = data['security_model']['algo']
         
@@ -68,16 +75,13 @@ class KeyManager:
             wdk=wdk,
             epk=epk,
             fp=fp,
-            password=bytearray(self._config._credentials._secret_key,'utf-8')
+            # password=bytearray(self._config._credentials._secret_key,'ISO-8859-1')
+            password = self._config._credentials._secret_key
         )
         #get the response
         print(f"hooray, dk = {dk}")
         # decode data including: edk, wdk, epk, fp
         return (edk,dk,algorithm,OnqlaveError())
-    
-    def fetch_decryption_key(self):
-        operation  = "FetchDecryptionKey"
-        raise NotImplementedError
     
     def unwrap_key(
             self, 

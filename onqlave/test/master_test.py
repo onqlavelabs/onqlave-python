@@ -15,16 +15,24 @@ from encryption.encryption import Encryption
 from credentials.credentials import Credential
 from connection.client import RetrySettings
 
+# {
+# 	"access_key": "onq.Na557t4YmAnhYC2ddRXGd7s8AzRNNsoG",
+# 	"arx_url": "https://dp0.onqlave.com/cluster--Qludg9OeHwhtGGbd8LSPB",
+# 	"server_signing_key": "onq.QHwZKmLaMor2rY8yX6b21EIAvwCOzhkY",
+# 	"server_secret_key": "onq.1neBvCfZXMeVdbsNcUZmEun1VkWOERkfppFGjljo344Wofa4fugeGh9P93uJo3npG5V6xd0hKY0yuOH8K0AnmTZUmYK8pBwypDVSApZnXzRsKcRXTQmJUkJTxx4KLy5c",
+# 	"client_key": ""
+# }
+
 debug_option = options.DebugOption(enable_debug=True)
 assert debug_option.get_debug_option() == True
 
-arx_option = options.ArxOption(arx_url="https://dp0.onqlave.io/cluster--RhiaE00keTpDEE9phzUid")
+arx_option = options.ArxOption(arx_url="https://dp0.onqlave.com/cluster--Qludg9OeHwhtGGbd8LSPB")
 assert type(arx_option.get_arx_url()) == str
 
 credential_option = Credential(
-    access_key="onq.Dwt6GE8wEBpMAu2ORAjYQntNM53hxw8O",
-    signing_key="onq.mRjihyxeG5LyIMrE7xAPasiSfogR6CRv",
-    secret_key="onq.mJZcj1CIZ5TOtrSZXY6OQUeUcfnx5FO84SLzecdlh2Pt8eIvc7PgKf4YLIEfxeaLPGrsCmcDQacW7lyvtjme3vFvmTCwOMUpdoPhCz5McINi4YNrQG1eisique5jJXP9")
+    access_key="onq.Na557t4YmAnhYC2ddRXGd7s8AzRNNsoG",
+    signing_key="onq.QHwZKmLaMor2rY8yX6b21EIAvwCOzhkY",
+    secret_key="onq.1neBvCfZXMeVdbsNcUZmEun1VkWOERkfppFGjljo344Wofa4fugeGh9P93uJo3npG5V6xd0hKY0yuOH8K0AnmTZUmYK8pBwypDVSApZnXzRsKcRXTQmJUkJTxx4KLy5c")
 retry_option = RetrySettings(count=1,wait_time=1,max_wait_time=2)
 
 encryption_engine = Encryption(

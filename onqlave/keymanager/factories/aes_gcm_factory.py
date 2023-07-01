@@ -1,10 +1,11 @@
 from keymanager.id_service import IDService
 from ctypes import c_uint32
 from keymanager.random_service import CSPRNG
-from keymanager.onqlave_types.types import KeyOperation, Key, KeyFormat
+from keymanager.onqlave_types.types import KeyOperation, Key, KeyFormat, KeyFactory
 from keymanager.primitives.aes_gcm_aead import validate_aes_key_size
+from onqlave.keymanager.onqlave_types.types import Key, KeyOperation
 
-class AEADGCMKeyFactory:
+class AEADGCMKeyFactory(KeyFactory):
     def __init__(self, id_service: IDService, random_service: CSPRNG) -> None:
         self._id_service = id_service
         self._random_service = random_service
@@ -12,6 +13,13 @@ class AEADGCMKeyFactory:
 
     def new_key(self,operation: KeyOperation):
         format = operation.get_format()
+
+    def new_key_from_data(self, operation: KeyOperation, key_data: bytearray) -> Key:
+        format = operation.get_format()
+        if not self.validate_key_format():
+            return None # or raise error
+        return 
+
 
     
     def validate_key(self,key: Key):

@@ -5,9 +5,15 @@ from keymanager.onqlave_types.types import HashTypeName,KeyFactory
 from keymanager.onqlave_types.types import AEAD, Key,KeyOperation
 from keymanager.operations.rsa_ssa_pkcs1_sha_operation import RsaSsaPkcs1Sha2562048KeyOperation
 from keymanager.primitives.rsa_ssa_pkcs1_sha import RSASSAPKCS1SHA
-class RSASSAPKCS1SHAKeyFactory():
+from Crypto.Hash import SHA1,SHA224,SHA256,SHA384,SHA512
+
+from onqlave.keymanager.onqlave_types.types import Key, KeyOperation
+class RSASSAPKCS1SHAKeyFactory(KeyFactory):
     def __init__(self, random_service: CSPRNG) -> None:
         self._random_service = random_service
+
+    def new_key_from_data(operation: KeyOperation, key_data: bytearray) -> Key:
+        return super().new_key_from_data(key_data)
     
     def rsa_hash_func(self, hash_algorithm: str) :
         """Return a hash function with a hash algorithm ID"""
@@ -22,16 +28,17 @@ class RSASSAPKCS1SHAKeyFactory():
         return hash_function,hash_id
     
     def _get_hash_function(self, hash: str) -> any:
+        
         if hash == "SHA1":
-            return sha1
+            return SHA1
         elif hash == "SHA224":
-            return sha224
+            return SHA224
         elif hash == "SHA256":
-            return sha256
+            return SHA256
         elif hash == "SHA384":
-            return sha384
+            return SHA384
         elif hash == "SHA512":
-            return sha512
+            return SHA512
         else:
             return None
 

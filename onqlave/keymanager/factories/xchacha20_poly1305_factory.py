@@ -1,16 +1,21 @@
 from ctypes import c_uint32
 
+from onqlave.keymanager.onqlave_types.types import Key, KeyOperation
+
 from ..id_service import IDService
 from ..random_service import CSPRNG
-from ..onqlave_types.types import KeyOperation,Key,KeyFormat
+from ..onqlave_types.types import KeyOperation,Key,KeyFormat,KeyFactory
 
-class XChaCha20Poly1305KeyFactory:
+class XChaCha20Poly1305KeyFactory(KeyFactory):
     def __init__(self, id_service: IDService, random_service: CSPRNG) -> None:
         self._id_service = id_service
         self._random_service = random_service
 
     def new_key(self, operation: KeyOperation):
         raise NotImplementedError
+
+    def new_key_from_data(operation: KeyOperation, key_data: bytearray) -> Key:
+        return super().new_key_from_data(key_data)
     
     def primitive(key: Key):
         raise NotImplementedError
