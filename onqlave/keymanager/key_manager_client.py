@@ -28,11 +28,20 @@ DECRYPT_RESOURCE_URL  = "oe2/keymanager/decrypt"
 
 
 class KeyManager:
-    """Performs key handling operations at client slide, including:
+    """A class for performing key handling operations at client slide, including:
     - Fetch encryption/decryption key
     - Unwrap the fetched encryption/decryption key
     """
     def __init__(self, configuration: Configuration ,random_service: CSPRNG) -> None:
+        """Instantiates a key manager
+
+        Args:
+            configuration: the desired configuration to instantiate this key manager
+            random_service: a random service that is going to be used by this key manager
+
+        Returns:
+            Nothing
+        """
         # hasher:
         self._hasher = Hasher()
         self._logger = logging.getLogger(self.__class__.__name__)
@@ -51,8 +60,18 @@ class KeyManager:
 
     
     def fetch_encryption_key(self):
-        """Fetch the encryption key from a defined Arx by parsing 
+        """Fetch the encryption key from a defined Arx then parsing 
         the data_key, wrapping_key, security_model from the response
+
+        Args:
+            Nothing
+
+        Returns:
+            A tuple contains:
+            encrypted_data_key - edk: bytes
+            data_key - dk
+            algorithm
+
         """
         operation  = "FetchEncryptionKey"
         start = datetime.utcnow()
@@ -81,7 +100,7 @@ class KeyManager:
         #get the response
         print(f"hooray, dk = {dk}")
         # decode data including: edk, wdk, epk, fp
-        return (edk,dk,algorithm,OnqlaveError())
+        return edk,dk,algorithm
     
     def unwrap_key(
             self, 
@@ -92,6 +111,19 @@ class KeyManager:
             fp: bytearray,
             password: bytearray
     ):
+        """Get the data key by unwrapping the fetched wrapped key
+
+        Args:
+            wrapping_algorithm: a string specified the used algo
+            operation: a string specified the used operation
+            wdk: a wrapped data key as bytearray 
+            epk: an encrypted private key as bytearray
+            fp: finger print key as bytearray
+            password: a secret used to encrypt the key, as bytearray
+
+        Returns:
+            The unwrapped data key
+        """ 
         wrapping_operation = self._operations[wrapping_algorithm]
         if wrapping_operation is None:
             return None

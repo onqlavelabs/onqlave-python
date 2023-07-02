@@ -2,6 +2,8 @@ from keymanager.onqlave_types.types import KeyOperation, KeyMaterialType, KeyID
 
 
 class AesGcmKeyData:
+    """A class defines the blueprint for the AES (GCM mode) key data
+    """
     def __init__(
             self, 
             value: bytearray, 
@@ -30,6 +32,8 @@ class AesGcmKeyData:
 
 
 class AesGcmKey:
+    """A class defines the blueprint for the AES (GCM mode) key
+    """
     def __init__(
             self, 
             operation: KeyOperation, 

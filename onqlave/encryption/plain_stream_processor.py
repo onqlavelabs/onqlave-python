@@ -3,6 +3,8 @@ import struct
 
 from keymanager.onqlave_types.types import AlgorithmSerialiser
 class PlainStreamProcessor:
+    """A class that modeling the stream processor for the encrypt/decrypt process
+    """
     def __init__(self,cipher_stream: io.BytesIO) -> None:
         self._cipher_stream = cipher_stream
 

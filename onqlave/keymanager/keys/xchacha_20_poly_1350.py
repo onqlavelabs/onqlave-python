@@ -1,6 +1,8 @@
 from keymanager.onqlave_types.types import KeyMaterialType, KeyID
 
 class XChaCha20Poly1305KeyData:
+    """A class define the blueprint of XChaCha20Poly1305 key data
+    """
     def __init__(
             self,
             type_url: str,

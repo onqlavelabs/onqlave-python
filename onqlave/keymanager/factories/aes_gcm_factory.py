@@ -11,6 +11,8 @@ from keymanager.operations.aes_128_gcm_operation import AESGCMKeyVersion
 
 
 class AEADGCMKeyFactory(KeyFactory):
+    """A class to init instances Key factory for the AEADGCM encryption process
+    """
     def __init__(self, id_service: IDService, random_service: CSPRNG) -> None:
         self._id_service = id_service
         self._random_service = random_service
