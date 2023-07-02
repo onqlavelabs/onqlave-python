@@ -32,7 +32,6 @@ class AEADGCMKeyFactory(KeyFactory):
                 version=0
             )
         )
-
     
     def validate_key(self,key: Key):
         key_data = key.data()
@@ -45,7 +44,8 @@ class AEADGCMKeyFactory(KeyFactory):
             return False
         # validate aes key size
         key_size = len(key_value) # should caset to uint32
-        validate_aes_key_size(key_size) # check this
+        if not validate_aes_key_size(key_size):
+            return False # check this
         
         return True
 

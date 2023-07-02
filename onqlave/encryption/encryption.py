@@ -1,5 +1,5 @@
 import logging
-
+import io
 # from logger.logger import OnqlaveLogging
 from keymanager.random_service import CSPRNG
 from keymanager.id_service import IDService
@@ -8,6 +8,9 @@ from connection.connection import Configuration
 from encryption.options import DebugOption,ArxOption
 from connection.client import RetrySettings
 from credentials.credentials import Credential
+
+from encryption.plain_stream_processor import PlainStreamProcessor
+
 from keymanager.onqlave_types.types import Aesgcm128,Aesgcm256,XChacha20poly1305,AlgorithmSerialiser
 from keymanager.factories.aes_gcm_factory import AEADGCMKeyFactory
 from keymanager.factories.xchacha20_poly1305_factory import XChaCha20Poly1305KeyFactory
@@ -85,14 +88,25 @@ class Encryption:
         pass
 
     # encrypt/decrypt
-    def encrypt(self) -> None:
+    def encrypt(self, plaintext: bytearray, associated_data: bytearray) -> None:
         #
         operation = "Encrypt"
+        
         header, primitive = self.init_encrypt_operation(operation=operation)
-        print(f"header = {header}\nprimitive = {primitive}")
-
-        # cipher_data = primitive.encrypt()
-        pass
+        
+        cipher_data = primitive.encrypt(
+            plaintext=plaintext,
+            associated_data=associated_data 
+        ) # should try-catch error if neccessary
+        print(f"cipher data = {cipher_data}")
+        
+        cipher_stream = io.BytesIO()
+        processor = PlainStreamProcessor(cipher_stream=cipher_stream)
+        processor.write_header(header)
+        processor.write_packet(cipher_data)
+        
+        # log a debug line here
+        return cipher_stream.getvalue()
 
     def derypt(self) -> None:
         pass
