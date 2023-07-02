@@ -1,4 +1,6 @@
 class DebugOption:
+    """A class modeling the configuration of the debug mode
+    """
     def __init__(self, enable_debug: bool) -> None:
         self._debug = enable_debug
     
@@ -10,6 +12,8 @@ class DebugOption:
 
 
 class ArxOption:
+    """A class for modeling the configuration of the Arx-related params in the encryption/decryption request
+    """
     def __init__(self, arx_url: str) -> None:
         self._arx_url = self._check_url(arx_url)
         

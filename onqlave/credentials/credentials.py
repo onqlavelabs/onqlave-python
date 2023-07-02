@@ -1,4 +1,6 @@
 class Credential:
+    """Modeling the configurations of the credentials used in the initialisation of the encrypt/decrypt operation
+    """
     def __init__(self, access_key: str, signing_key: str, secret_key: str) -> None:
         self._access_key = self._validate_key(access_key)
         self._signing_key = self._validate_key(signing_key)

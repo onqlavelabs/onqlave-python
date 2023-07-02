@@ -23,7 +23,7 @@ class Encryption:
     """A class that models the encryption services with 2 main groups of features:
     - Encrypt/Decrypt data blocks
     - Encrypt/Decrypt data streams
-    Before actually begin the encrypt/decrypt, it requires an init step for these operations
+    Before actually begin the encrypt/decrypt, it requires an inititalisation step for these operations
     """
 
     def __init__(self, 
@@ -31,14 +31,16 @@ class Encryption:
                  arx_option: ArxOption,
                  credential_option: Credential,
                  retry_setting: RetrySettings) -> None:
-        """ Init an instance of the encryption service with the following params:
-        option = {credentials, retryoptions, arx_url}
-        logger
-        random_number_generation_service
-        id_gen_service
-        aead_gcm_key_factory
-        x_ch_cha_key_factory 
+        """ Init an instance of the encryption service
 
+        Args:
+            debug_option: specify the preffered debug optionn
+            arx_option: specify the configuration of the arx
+            credential_option: specify the credentials
+            retry_setting: specify the retry setting
+
+        Returns:
+            Nothing
         """
         self._logger = logging.getLogger(self.__class__.__name__)
         # random service
@@ -68,11 +70,18 @@ class Encryption:
     # impl setters & getters
 
     # init encrypt/decrypt operations
-    def init_encrypt_operation(self, operation: str) -> None:
-        """Return the algorithm and primitives of the encrypt operation
+    def init_encrypt_operation(self, operation: str):
+        """Init the encrypt operation by getting the required data including: algorithm, primitives, keys of the encrypt operation
+
+        Args:
+            operation: a string describe the name of the operation
+        
+        Returns:
+            The algorithm & primitive
+
         """
         # get the edk, dk, algo from Onqlave keymanager
-        edk, dk, algo, err = self._key_mamanger.fetch_encryption_key()
+        edk, dk, algo = self._key_mamanger.fetch_encryption_key()
         ops = self._operations[algo]
         
         factory = ops.get_factory()
@@ -88,8 +97,18 @@ class Encryption:
         pass
 
     # encrypt/decrypt
-    def encrypt(self, plaintext: bytearray, associated_data: bytearray) -> None:
-        #
+    def encrypt(self, plaintext: bytearray, associated_data: bytearray) -> bytes:
+        """ Encrypt plaintext (as a bytearray) with the combination of associated_data
+
+        Args:
+            plaintext: a bytearray contains the plain data that needs to be encrypted
+            associated_data: a bytearray contains the associated data that is going to be
+            used before the encryption process happens
+
+        Returns:
+            the value of the cipher as bytes
+
+        """
         operation = "Encrypt"
         
         header, primitive = self.init_encrypt_operation(operation=operation)
