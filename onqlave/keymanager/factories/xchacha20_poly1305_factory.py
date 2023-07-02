@@ -1,6 +1,6 @@
 from ctypes import c_uint32
 
-from onqlave.keymanager.onqlave_types.types import Key, KeyOperation
+from keymanager.onqlave_types.types import Key, KeyOperation
 
 from ..id_service import IDService
 from ..random_service import CSPRNG

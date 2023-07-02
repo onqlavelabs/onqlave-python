@@ -4,12 +4,11 @@ from keymanager.onqlave_types.types import KeyOperation, KeyMaterialType, KeyID
 class AesGcmKeyData:
     def __init__(
             self, 
-            type_url: str, 
             value: bytearray, 
             key_material_type: KeyMaterialType, 
             version: int
     ) -> None:
-        self._type_url = type_url
+        self._type_url = None
         self._value = value
         self._key_material_type = key_material_type
         self._version = version

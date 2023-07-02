@@ -3,16 +3,18 @@ import logging
 # from logger.logger import OnqlaveLogging
 from keymanager.random_service import CSPRNG
 from keymanager.id_service import IDService
-from keymanager.key_manager_client import KeyManager,Configuration
+from keymanager.key_manager_client import KeyManager
+from connection.connection import Configuration
 from encryption.options import DebugOption,ArxOption
 from connection.client import RetrySettings
 from credentials.credentials import Credential
-from keymanager.onqlave_types.types import Aesgcm128,Aesgcm256,XChacha20poly1305
+from keymanager.onqlave_types.types import Aesgcm128,Aesgcm256,XChacha20poly1305,AlgorithmSerialiser
 from keymanager.factories.aes_gcm_factory import AEADGCMKeyFactory
 from keymanager.factories.xchacha20_poly1305_factory import XChaCha20Poly1305KeyFactory
 from keymanager.operations.aes_128_gcm_operation import AesGcmKeyOperation
 from keymanager.operations.aes_256_gcm_operation import Aes256GcmKeyOperation
 from keymanager.operations.xchacha20_poly1305_operation import XChaCha20Poly1305KeyOperation
+
 
 class Encryption:
     """A class that models the encryption services with 2 main groups of features:
@@ -39,7 +41,7 @@ class Encryption:
         # random service
         self._csprng = CSPRNG()
         # id gen
-        self._id_generator = IDService()
+        self._id_generator = IDService(self._csprng)
         index = arx_option.get_arx_url().rindex("/") # do sth to find the last index of the "/"
         arx_url = arx_option.get_arx_url()[:index]
         arx_id = arx_option.get_arx_url()[index+1:]
@@ -67,15 +69,17 @@ class Encryption:
         """Return the algorithm and primitives of the encrypt operation
         """
         # get the edk, dk, algo from Onqlave keymanager
-        edk, dk, algorithm, err = self._key_mamanger.fetch_encryption_key()
-        ops = self._operations[algorithm]
+        edk, dk, algo, err = self._key_mamanger.fetch_encryption_key()
+        ops = self._operations[algo]
         
         factory = ops.get_factory()
         key = factory.new_key_from_data(ops,dk)
 
-        primitive = factory.get_primitive()
-        #
-        pass
+        primitive = factory.primitive(key)
+
+        algorithm = AlgorithmSerialiser(version=0,algo=algo,key=edk)
+
+        return algorithm, primitive
 
     def init_decrypt_operation(self) -> None:
         pass
@@ -84,7 +88,10 @@ class Encryption:
     def encrypt(self) -> None:
         #
         operation = "Encrypt"
-        self.init_encrypt_operation(operation=operation)
+        header, primitive = self.init_encrypt_operation(operation=operation)
+        print(f"header = {header}\nprimitive = {primitive}")
+
+        # cipher_data = primitive.encrypt()
         pass
 
     def derypt(self) -> None:
