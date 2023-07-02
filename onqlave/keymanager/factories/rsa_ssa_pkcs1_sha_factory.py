@@ -7,7 +7,7 @@ from keymanager.operations.rsa_ssa_pkcs1_sha_operation import RsaSsaPkcs1Sha2562
 from keymanager.primitives.rsa_ssa_pkcs1_sha import RSASSAPKCS1SHA
 from Crypto.Hash import SHA1,SHA224,SHA256,SHA384,SHA512
 
-from onqlave.keymanager.onqlave_types.types import Key, KeyOperation
+from keymanager.onqlave_types.types import Key, KeyOperation
 class RSASSAPKCS1SHAKeyFactory(KeyFactory):
     def __init__(self, random_service: CSPRNG) -> None:
         self._random_service = random_service
