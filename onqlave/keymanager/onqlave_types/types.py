@@ -1,4 +1,5 @@
 import struct
+import io
 
 from ctypes import c_int32, c_uint32
 
@@ -137,7 +138,9 @@ class Algorithm:
         return self._key
 
     def algorithm(self):
-        return AlgorithmTypeName[int(self._algo)]
+        return AlgorithmTypeName[
+            int.from_bytes(self._algo,byteorder='big')
+        ]
 
     def version(self):
         return self._version
@@ -149,9 +152,9 @@ class Algorithm:
         header_len = struct.pack(">I", 7 + len(self.key()))
         buffer.extend(header_len)
         buffer.append(self.version())
-        buffer.append(self.algorithm())
+        buffer.append(self._algo)
         buffer.append(len(self.key()).to_bytes())
-        buffer.append(self.key())
+        buffer.extend(self.key())
         return buffer
 
     def deserialise(self, buffer: bytearray):
@@ -170,17 +173,33 @@ class Algorithm:
         return int(header_len)
 
 
-class AlgorithmSerialiser:
+class AlgorithmSerialiser():
     def __init__(self, version: bytes, algo: str, key: bytearray):
         self._version = version
         self._algo = AlgorithmTypeValue[algo].to_bytes(1,byteorder='big')
         self._key = key
 
-    def serialise(self):  # return a bytearray
-        raise NotImplementedError
+    def serialise(self) -> bytearray:
+        """Write the data in an Algorithm instance to a bytearray
+        """
+        # buffer = bytearray()
+        # header_len = struct.pack(">I", 7 + len(self._key))
+        # buffer.extend(header_len)
+        # buffer.append(self._version) # please check the diff between extend & append
+        # buffer.append(int.from_bytes(self._algo,byteorder='big'))
+        # buffer.append(len(self._key))
+        # buffer.extend(self._key)
+        buffer = io.BytesIO()
+        header_len = struct.pack(">I", 7 + len(self._key))
+        buffer.write(header_len)
+        buffer.write(bytes([self._version]))
+        buffer.write(bytes([int.from_bytes(self._algo,byteorder='big')]))
+        buffer.write(bytes([len(self._key)]))
+        buffer.write(self._key)
+        return buffer.getvalue()
 
 
-class AlgorithmDeserialiser:
+class AlgorithmDeserialiser():
     def deserialise(self, buffer: bytearray) -> int:
         raise NotImplementedError
 

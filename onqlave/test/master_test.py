@@ -42,5 +42,9 @@ encryption_engine = Encryption(
     retry_setting=retry_option
 )
 
-encryption_engine.encrypt()
+plaintext = "hello world"
+associated_data = "shit"
+
+cipher_text = encryption_engine.encrypt(plaintext.encode(), associated_data.encode())
 print("Hello Onqlave")
+print(f"cipher text = {cipher_text}")
