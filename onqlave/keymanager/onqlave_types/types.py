@@ -200,8 +200,26 @@ class AlgorithmSerialiser():
 
 
 class AlgorithmDeserialiser():
+    def __init__(self) -> None:
+        self._version = None
+        self._algo = None
+        self._key = None
+
     def deserialise(self, buffer: bytearray) -> int:
-        raise NotImplementedError
+        if len(buffer) < 7:
+            raise Exception # invalid cipher data
+        
+        header_len = int.from_bytes(buffer[:4],'big')
+        if len(buffer) < header_len:
+            raise Exception # invalid cipher data
+        
+        self._version = buffer[4]
+        self._algo = buffer[5]
+        key_len = buffer[6]
+
+        self._key = buffer[7:7+key_len]
+        
+        return header_len
 
     def key(self) -> bytearray:  # return a bytearray
         raise NotImplementedError

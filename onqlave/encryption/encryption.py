@@ -1,5 +1,6 @@
 import logging
 import io
+from datetime import datetime
 # from logger.logger import OnqlaveLogging
 from keymanager.random_service import CSPRNG
 from keymanager.id_service import IDService
@@ -10,8 +11,10 @@ from connection.client import RetrySettings
 from credentials.credentials import Credential
 
 from encryption.plain_stream_processor import PlainStreamProcessor
+from encryption.encrypted_stream_processor import EncryptedStreamProcessor
 
-from keymanager.onqlave_types.types import Aesgcm128,Aesgcm256,XChacha20poly1305,AlgorithmSerialiser
+from keymanager.onqlave_types.types import Aesgcm128,Aesgcm256,XChacha20poly1305
+from keymanager.onqlave_types.types import AlgorithmSerialiser, AlgorithmDeserialiser
 from keymanager.factories.aes_gcm_factory import AEADGCMKeyFactory
 from keymanager.factories.xchacha20_poly1305_factory import XChaCha20Poly1305KeyFactory
 from keymanager.operations.aes_128_gcm_operation import AesGcmKeyOperation
@@ -93,8 +96,31 @@ class Encryption:
 
         return algorithm, primitive
 
-    def init_decrypt_operation(self) -> None:
-        pass
+    def init_decrypt_operation(self, operation: str, algo: AlgorithmSerialiser):
+        """Init the decrypt operation by fetching the decryption key from the Onqlave Platform,
+        then init the key factory and encryption primitives
+
+        Args:
+            operation: a string indicates the name/type of the operation
+            algo: a specified object contains the information about the selected algorithm
+
+        Returns:
+            The encryption primitive object
+        """
+        # get the decryption key
+        # add a try catch here
+        dk = self._key_mamanger.fetch_decryption_key(algo._key)
+
+        # maybe some try-catch here too
+        ops = self._operations[algo._algo]
+        factory = ops.get_factory()
+
+        # some try-catch here
+        key = factory.new_key_from_data(ops, dk)
+
+        primitive = factory.primitive(key)
+
+        return primitive
 
     # encrypt/decrypt
     def encrypt(self, plaintext: bytearray, associated_data: bytearray) -> bytes:
@@ -127,8 +153,27 @@ class Encryption:
         # log a debug line here
         return cipher_stream.getvalue()
 
-    def derypt(self) -> None:
-        pass
+    def derypt(self, cipher_data: bytearray, associated_data: bytearray) -> None:
+        operation = "Decrypt"
+        start = datetime.utcnow()
+        # log a ebug line for starting the decrypt operation
+
+        cipher_stream = io.BytesIO(initial_bytes=cipher_data)
+        processor = EncryptedStreamProcessor(cipher_stream)
+        # shoul try-catch this command
+        algo = processor.read_header()
+
+        # maybe this one need try-catch?
+        primitive = self.init_decrypt_operation(operation, algo)
+
+        # this one needs try-catch?
+        cipher = processor.read_packet()
+        
+        # try-catch
+        plain_data = primitive.decrypt(cipher, associated_data)
+
+        # log a debug line
+        return plain_data
 
     # encrypt/decrypt stream
     def encrypt_stream(self) -> None:
