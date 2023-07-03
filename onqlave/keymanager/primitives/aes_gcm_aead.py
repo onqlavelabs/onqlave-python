@@ -25,7 +25,7 @@ class AESGCMAEAD:
         if not validate_aes_key_size(len(self._key_value)):
             raise Exception # should be detailed
         
-        self.prependIV = True
+        self._prependIV = True
 
     def encrypt(
         self, 
@@ -44,8 +44,8 @@ class AESGCMAEAD:
         cipher.update(assoc_data=associated_data)
         cipher_text = cipher.encrypt(plaintext)
 
-        cipher_stream = io.BytesIO()
-        # processor = PlainStreamProcessor
+        if self._prependIV:
+            return iv + cipher_text
 
         return cipher_text
         

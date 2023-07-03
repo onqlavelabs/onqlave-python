@@ -53,9 +53,9 @@ class Client:
         )
         # do something to retry the request
         if response.status_code == 429:
-            pass # return onqlaveerrors.SDKerrorcode
+            raise Exception # return onqlaveerrors.SDKerrorcode
         elif response.status_code >= 400:
-            pass # return some errors
+            raise Exception
         print(f"response = {response}")
         return response.json()
         

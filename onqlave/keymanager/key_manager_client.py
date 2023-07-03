@@ -6,7 +6,7 @@ from datetime import datetime
 # from connection.client import RetrySettings
 from utils.hasher import Hasher
 # from logger.logger import OnqlaveLogging
-from contracts.requests.requests import EncryptionOpenRequest
+from contracts.requests.requests import EncryptionOpenRequest, DecryptionOpenRequest
 from connection.connection import Connection,Configuration
 from keymanager.factories.rsa_ssa_pkcs1_sha_factory import RSASSAPKCS1SHAKeyFactory
 from keymanager.random_service import CSPRNG
@@ -134,5 +134,41 @@ class KeyManager:
             wdk=wdk,epk=epk,fp=fp,password=password
         )
         return dk
-        
+
+    def fetch_decryption_key(self,edk: bytearray):
+        """Get the decryption key from the Onqlave Platform and parsing the received data
+
+        Args:
+            edk: the encrypted data key as a bytearray
+
+        Returns
+            dk: the unwrapped data key as a bytearray
+        """
+        operation="FetchDecryptionKey"
+        start = datetime.utcnow()
+
+        request = DecryptionOpenRequest(
+            edk=base64.b64encode(edk),
+        )
+        # should try-catch this command
+        data = self._http_client.post(resource=DECRYPT_RESOURCE_URL,body=request)
+
+        wdk = base64.b64decode(data['data_key']['wrapped_data_key'])
+        epk = base64.b64decode(data['wrapping_key']['encrypted_private_key']).decode("ISO-8859-1")
+        fp = base64.b64decode(data['wrapping_key']['key_fingerprint'])
+        wrapping_algorithm = data['security_model']['wrapping_algo']
+        dk = self.unwrap_key(
+            wrapping_algorithm=wrapping_algorithm,
+            operation=operation,
+            wdk=wdk,
+            epk=epk,
+            fp=fp,
+            password=self._config._credentials._secret_key
+        )
+        # log a debug line for the fetch decryption key operation
+        return dk
+
+        # print a debug line for fetching the decryption ope
+
+
 
