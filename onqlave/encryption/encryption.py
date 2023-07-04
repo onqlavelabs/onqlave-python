@@ -96,7 +96,7 @@ class Encryption:
 
         return algorithm, primitive
 
-    def init_decrypt_operation(self, operation: str, algo: AlgorithmSerialiser):
+    def init_decrypt_operation(self, operation: str, algo: AlgorithmDeserialiser):
         """Init the decrypt operation by fetching the decryption key from the Onqlave Platform,
         then init the key factory and encryption primitives
 
@@ -112,7 +112,7 @@ class Encryption:
         dk = self._key_mamanger.fetch_decryption_key(algo._key)
 
         # maybe some try-catch here too
-        ops = self._operations[algo._algo]
+        ops = self._operations[algo.algorithm()] # modify a little bit compared to the Go SDK
         factory = ops.get_factory()
 
         # some try-catch here

@@ -228,4 +228,4 @@ class AlgorithmDeserialiser():
         raise NotImplementedError
 
     def algorithm(self) -> str:
-        raise NotImplementedError
+        return AlgorithmTypeName[self._algo]

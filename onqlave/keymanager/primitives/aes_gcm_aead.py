@@ -56,7 +56,49 @@ class AESGCMAEAD:
         )
         return aes_cipher 
         
+    def decrypt(
+        self,
+        ciphertext: bytearray,
+        associated_data: bytearray
+    ):
+        """Decrypts ciphertext with iv and associated data
+        If prependIV is true, the iv argument and the first AESGCMIVSize bytes of the ciphertext
+        must be equal. The ciphertext argument is as follows:
+        |iv|actual cipher text|tag|
+        if false, the ciphertext argument is:
+        |actual ciphertext|tag|
 
+        Args:
+            ciphertext: the ciphertext, formatted as a bytearray
+            associated_data: the data included in the encrypt/decrypt process, formatted as a bytearray
+        Returns:
+            The decrypted ciphertext
+        """
+        if len(ciphertext) < AESGCMIVSize:
+            raise Exception # cipher text too short
+        
+        iv = ciphertext[:AESGCMIVSize]
+        if len(iv) != AESGCMIVSize:
+            raise Exception # unexpected IV Size
+        
+        actual_cipher_text = bytearray()
+
+        if self._prependIV:
+            if len(ciphertext) < MinPrependIVCiphertextSize:
+                raise Exception # ciphertext too short
+            if iv != ciphertext[:AESGCMIVSize]:
+                raise Exception # unequal IVs:
+            
+            actual_cipher_text = ciphertext[AESGCMIVSize]
+        else:
+            if len(ciphertext) < MinNoIVCiphertextSize:
+                raise Exception # cipher text too short 
+            actual_cipher_text = ciphertext
+
+        # should try-catch
+        cipher = self.new_cipher()
+
+        plain_text = cipher.decrypt(actual_cipher_text,)
 
 
 def validate_aes_key_size(size_in_bytes: int) -> bool:
