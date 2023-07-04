@@ -20,9 +20,8 @@ class EncryptionOpenRequest(OnqlaveRequest):
         
 
 class DecryptionOpenRequest(OnqlaveRequest):
-    def __init__(self, edk:str) -> None:
-        # self._edk = "encrypted_data_key" # required, max = 1500
-        self._json = {"encrypted_data_key":edk}
+    def __init__(self, body_data: dict) -> None:
+        super().__init__(body_data=body_data)
     
     def get_content(self):
         return json.dumps(self._json)

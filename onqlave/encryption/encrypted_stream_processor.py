@@ -33,14 +33,14 @@ class EncryptedStreamProcessor:
     def read_packet(self):
         packet_len_buffer = bytearray(4)
         # should try catch this command
-        data_len = self._cipher_stream.read(packet_len_buffer)
+        data_len = self._cipher_stream.readinto(packet_len_buffer)
         
         if data_len < 4:
             raise Exception # invalid cipher data
         
         packet_len = int.from_bytes(packet_len_buffer,'big')
         buffer =bytearray(packet_len)
-        data_len = self._cipher_stream.read(buffer)
+        data_len = self._cipher_stream.readinto(buffer)
 
         if data_len < int(packet_len):
             raise Exception # invalid cipher data

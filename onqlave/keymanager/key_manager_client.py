@@ -148,7 +148,13 @@ class KeyManager:
         start = datetime.utcnow()
 
         request = DecryptionOpenRequest(
-            edk=base64.b64encode(edk),
+            body_data={
+                "encrypted_data_key":base64.b64encode(edk).decode('utf-8')
+            }
+            # equivalent Go code: 
+            # request := requests.DecryptionOpenRequest{
+		    # EDK: base64.StdEncoding.EncodeToString(edk),}
+	        
         )
         # should try-catch this command
         data = self._http_client.post(resource=DECRYPT_RESOURCE_URL,body=request)
