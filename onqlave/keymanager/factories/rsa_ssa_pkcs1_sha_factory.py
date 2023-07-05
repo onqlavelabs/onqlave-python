@@ -43,7 +43,6 @@ class RSASSAPKCS1SHAKeyFactory(KeyFactory):
             return None
 
     def _get_hash_type(self, hash_type: c_int32) -> str:
-        print(f"hash_type = {hash_type.value}")
         return HashTypeName[hash_type.value]
     
     def _get_hash_id(self,hash_algorithm: str) -> int:

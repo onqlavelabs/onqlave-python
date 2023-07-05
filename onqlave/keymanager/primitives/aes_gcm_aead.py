@@ -6,8 +6,8 @@ from Crypto.Cipher import AES
 from keymanager.onqlave_types.types import Key
 from keymanager.random_service import CSPRNG
 
-AESGCMIVSize = 12
-AESGCMTagSize = 16
+AESGCMIVSize = 12 # aes-gcm init vector size
+AESGCMTagSize = 16 
 AESGCMMaxPlaintextSize = (1 << 36) - 31
 MAX_INT = sys.maxsize
 MaxIntPlainTextSize = MAX_INT - AESGCMIVSize - AESGCMTagSize
@@ -40,19 +40,24 @@ class AESGCMAEAD:
             max_plain_text_size = AESGCMMaxPlaintextSize
         if len(plaintext) > max_plain_text_size:
             raise Exception # plain text size too long
-        cipher = self.new_cipher()
+        # cipher = self.new_cipher()
+        cipher = AES.new(
+            key=self._key_value,
+            mode=AES.MODE_GCM,
+            nonce=iv
+        )
         cipher.update(assoc_data=associated_data)
         cipher_text = cipher.encrypt(plaintext)
-
+        tag_bytes = cipher.digest()
         if self._prependIV:
-            return iv + cipher_text
-
-        return cipher_text
+            return iv + cipher_text + tag_bytes
+        else:
+            return cipher_text
         
     def new_cipher(self):
         aes_cipher = AES.new(
             key=self._key_value,
-            mode=AES.MODE_GCM
+            mode=AES.MODE_GCM,
         )
         return aes_cipher 
         
@@ -79,26 +84,32 @@ class AESGCMAEAD:
         
         iv = ciphertext[:AESGCMIVSize]
         if len(iv) != AESGCMIVSize:
-            raise Exception # unexpected IV Size
-        
+            raise Exception # unexpected IV Size 
+
         actual_cipher_text = bytearray()
 
         if self._prependIV:
+            # actual_cipher_text = ciphertext[AESGCMIVSize+AESGCMTagSize:]
             if len(ciphertext) < MinPrependIVCiphertextSize:
                 raise Exception # ciphertext too short
             if iv != ciphertext[:AESGCMIVSize]:
                 raise Exception # unequal IVs:
-            
-            actual_cipher_text = ciphertext[AESGCMIVSize]
+            actual_cipher_text = ciphertext[AESGCMIVSize:len(ciphertext)-AESGCMTagSize]
         else:
+            # actual_cipher_text = ciphertext[AESGCMTagSize:]
             if len(ciphertext) < MinNoIVCiphertextSize:
                 raise Exception # cipher text too short 
             actual_cipher_text = ciphertext
 
         # should try-catch
-        cipher = self.new_cipher()
+        cipher = AES.new(
+            key=self._key_value,
+            mode=AES.MODE_GCM,
+            nonce=iv
+        )
 
-        plain_text = cipher.decrypt(actual_cipher_text,)
+        plain_text = cipher.decrypt(actual_cipher_text)
+        return plain_text
 
 
 def validate_aes_key_size(size_in_bytes: int) -> bool:

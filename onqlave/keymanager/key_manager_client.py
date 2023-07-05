@@ -97,8 +97,6 @@ class KeyManager:
             # password=bytearray(self._config._credentials._secret_key,'ISO-8859-1')
             password = self._config._credentials._secret_key
         )
-        #get the response
-        print(f"hooray, dk = {dk}")
         # decode data including: edk, wdk, epk, fp
         return edk,dk,algorithm
     

@@ -61,7 +61,6 @@ class Connection:
         arx_id = self._configuration._arx_id
 
         digest = self._hasher.digest(body)
-        print(f"digest = {digest}")
 
         headers_to_sign = {
             OnqlaveAPIKey: self._configuration._credentials._access_key,
@@ -72,8 +71,9 @@ class Connection:
             OnqlaveDigest: digest,
             OnqlaveVersion: Version
         }
+        # add try-catch
         signature = self._hasher.sign(headers_to_sign,self._configuration._credentials._signing_key)
-        print(f"signed: {signature}") # need some error check
+        
         headers = {
             OnqlaveContent: Oonqlave_Content,
             OnqlaveAPIKey: self._configuration._credentials._access_key,
@@ -86,9 +86,7 @@ class Connection:
             OnqlaveVersion: Version,
             OnqlaveSignature: signature
         }
-        print(f"arx_id={arx_id}")
         response = self._client.post(url_string,request_body=body, headers=headers)
-        print(response)
         return response # need to handle errors later
 
 # {
