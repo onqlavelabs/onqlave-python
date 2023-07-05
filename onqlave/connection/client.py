@@ -56,7 +56,6 @@ class Client:
             raise Exception # return onqlaveerrors.SDKerrorcode
         elif response.status_code >= 400:
             raise Exception
-        print(f"response = {response}")
         return response.json()
         
     def do_request_with_retry(self,resource,body) -> None:
