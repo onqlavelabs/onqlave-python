@@ -1,7 +1,8 @@
 from ctypes import c_uint32
 
-from keymanager.onqlave_types.types import Key, KeyOperation
-
+from keymanager.onqlave_types.types import Key, KeyOperation, KeyMaterialSYMMETRIC
+from keymanager.keys.xchacha_20_poly_1350 import XChaCha20Poly1305KeyData, XChaCha20Poly1305Key
+from keymanager.primitives.xchacha20_poly1305_aead import XChaCha20Poly1305AEAD
 from ..id_service import IDService
 from ..random_service import CSPRNG
 from ..onqlave_types.types import KeyOperation,Key,KeyFormat,KeyFactory
@@ -12,13 +13,29 @@ class XChaCha20Poly1305KeyFactory(KeyFactory):
         self._random_service = random_service
 
     def new_key(self, operation: KeyOperation):
-        raise NotImplementedError
+        format = operation.get_format()
+        
 
-    def new_key_from_data(operation: KeyOperation, key_data: bytearray) -> Key:
-        return super().new_key_from_data(key_data)
+    def new_key_from_data(self, operation: KeyOperation, key_data: bytearray) -> Key:
+        format = operation.get_format()
+        return XChaCha20Poly1305Key(
+            key_id=self._id_service.new_key_id(),
+            operation=operation,
+            data=XChaCha20Poly1305KeyData(
+                value=key_data,
+                key_material_type=KeyMaterialSYMMETRIC,
+                version=0
+            )
+        )
+
     
-    def primitive(key: Key):
-        raise NotImplementedError
+    def primitive(self, key: Key):
+        # validate the key
+        ret = XChaCha20Poly1305AEAD(
+            key=key,
+            random_service=self._random_service
+        )
+        return ret
     
     def validate_key(self, key: Key):
         # validate key version
@@ -29,15 +46,15 @@ class XChaCha20Poly1305KeyFactory(KeyFactory):
 
         raise NotImplementedError
     
-    def validate_key_format(format: KeyFormat):
+    def validate_key_format(self, format: KeyFormat):
         raise NotImplementedError
     
-    def validate_key_version(version: c_uint32, max_expected: c_uint32) -> bool:
+    def validate_key_version(self, version: c_uint32, max_expected: c_uint32) -> bool:
         if version > max_expected:
             return False
         return True
     
-    def validate_key_size(size_in_bytes: c_uint32) -> bool:
+    def validate_key_size(self, size_in_bytes: c_uint32) -> bool:
         if size_in_bytes != 32: # need to double check this because golang SDK use constant from other lib
             return False
         return True
