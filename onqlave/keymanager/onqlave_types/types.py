@@ -69,10 +69,10 @@ AlgorithmTypeValue = {
 
 
 class AEAD:
-    def encrypt(plain_text, associated_data: bytearray) -> bytearray:
+    def encrypt(self, plaintext: bytearray, associated_data: bytearray) -> bytearray:
         raise NotImplementedError
 
-    def decrypt(cipher_text, associated_data: bytearray) -> bytearray:
+    def decrypt(self, ciphertext: bytearray, associated_data: bytearray) -> bytearray:
         raise NotImplementedError
 
 
