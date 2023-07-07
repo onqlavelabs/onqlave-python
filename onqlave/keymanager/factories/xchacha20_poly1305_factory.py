@@ -12,12 +12,7 @@ class XChaCha20Poly1305KeyFactory(KeyFactory):
         self._id_service = id_service
         self._random_service = random_service
 
-    def new_key(self, operation: KeyOperation):
-        format = operation.get_format()
-        
-
     def new_key_from_data(self, operation: KeyOperation, key_data: bytearray) -> Key:
-        format = operation.get_format()
         return XChaCha20Poly1305Key(
             key_id=self._id_service.new_key_id(),
             operation=operation,
@@ -27,7 +22,6 @@ class XChaCha20Poly1305KeyFactory(KeyFactory):
                 version=0
             )
         )
-
     
     def primitive(self, key: Key):
         # validate the key

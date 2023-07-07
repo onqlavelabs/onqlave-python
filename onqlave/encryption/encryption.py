@@ -176,11 +176,53 @@ class Encryption:
         return plain_data
 
     # encrypt/decrypt stream
-    def encrypt_stream(self) -> None:
-        pass
+    def encrypt_stream(
+            self, 
+            plainstream: io.BytesIO, 
+            cipherstream: io.BytesIO,
+            associated_data: bytearray
+    ) -> None:
+        operation = "EncryptStream"
+        header, primitive = self.init_encrypt_operation(operation)
+        processor = PlainStreamProcessor(cipherstream)
+        processor.write_header(header)
+        temp_buffer = bytearray(32*1024)
 
-    def derypt_stream(self) -> None:
-        pass
+        while True:
+            # try-catch
+            data_len = plainstream.readinto(temp_buffer)
+            if data_len == 0:
+                break
+            
+            cipher_text = primitive.encrypt(temp_buffer[:data_len],associated_data)
+            processor.write_packet(cipher_text)
+            
+
+
+    def derypt_stream(
+            self,
+            cipherstream: io.BytesIO,
+            plainstream: io.BytesIO,
+            associated_data: bytearray
+    ) -> None:
+        operation = "DecryptStream"
+        
+        processor = EncryptedStreamProcessor(cipherstream)
+        algo = processor.read_header()
+        header, primitive = self.init_decrypt_operation(operation,algo)
+        
+        while True:
+            try:
+                ciphertext = processor.read_packet()
+            except Exception as exc:
+                break
+
+            plain_data = primitive.decrypt(ciphertext, associated_data)
+
+            plainstream.write(plain_data)
+            
+        
+        
 
     # encrypt/decrypts structure
     def encrypt_structure(self) -> None:
