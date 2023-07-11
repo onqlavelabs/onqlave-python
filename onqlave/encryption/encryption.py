@@ -125,11 +125,12 @@ class Encryption:
     # encrypt/decrypt
     def encrypt(self, plaintext: bytearray, associated_data: bytearray) -> bytes:
         """ Encrypt plaintext (as a bytearray) with the combination of associated_data
+        regarding to the application of AEAD - Authenticated Encryption with Associated Data
 
         Args:
             plaintext: a bytearray contains the plain data that needs to be encrypted
             associated_data: a bytearray contains the associated data that is going to be
-            used before the encryption process happens
+            used for the authentication
 
         Returns:
             the value of the cipher as bytes
@@ -153,7 +154,17 @@ class Encryption:
         # log a debug line here
         return cipher_stream.getvalue()
 
-    def derypt(self, cipher_data: bytearray, associated_data: bytearray) -> None:
+    def derypt(self, cipher_data: bytearray, associated_data: bytearray):
+        """Decrypt data (as a bytearray) under the AEAD
+
+        Args:
+            cipher_data: a bytearray contains the encrypted data that needs to be decrypted
+            associated_data: a bytearray contains the associated data that is going to be
+            used for the authentication
+
+        Returns:
+            The decrypted data
+        """
         operation = "Decrypt"
         start = datetime.utcnow()
         # log a ebug line for starting the decrypt operation
@@ -178,19 +189,24 @@ class Encryption:
     # encrypt/decrypt stream
     def encrypt_stream(
             self, 
-            plainstream: io.BytesIO, 
-            cipherstream: io.BytesIO,
+            plain_stream: io.BytesIO, 
+            cipher_stream: io.BytesIO,
             associated_data: bytearray
     ) -> None:
+        """Encrypt the plainstream and output the result into the cipherstream
+
+        Args:
+            plain
+        """
         operation = "EncryptStream"
         header, primitive = self.init_encrypt_operation(operation)
-        processor = PlainStreamProcessor(cipherstream)
+        processor = PlainStreamProcessor(cipher_stream)
         processor.write_header(header)
         temp_buffer = bytearray(32*1024)
 
         while True:
             # try-catch
-            data_len = plainstream.readinto(temp_buffer)
+            data_len = plain_stream.readinto(temp_buffer)
             if data_len == 0:
                 break
             
@@ -201,14 +217,14 @@ class Encryption:
 
     def derypt_stream(
             self,
-            cipherstream: io.BytesIO,
-            plainstream: io.BytesIO,
+            cipher_stream: io.BytesIO,
+            plain_stream: io.BytesIO,
             associated_data: bytearray
     ) -> None:
         operation = "DecryptStream"
         
-        processor = EncryptedStreamProcessor(cipherstream)
-        cipherstream.seek(0)
+        processor = EncryptedStreamProcessor(cipher_stream)
+        cipher_stream.seek(0)
         algo = processor.read_header()
         primitive = self.init_decrypt_operation(operation,algo)
         
@@ -220,7 +236,7 @@ class Encryption:
 
             plain_data = primitive.decrypt(ciphertext, associated_data)
 
-            plainstream.write(plain_data)
+            plain_stream.write(plain_data)
             
         
         
