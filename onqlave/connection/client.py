@@ -5,26 +5,39 @@ from datetime import datetime
 from contracts.requests.requests import OnqlaveRequest
 from messages import messages
 class RetrySettings:
+    """A class for initializing the retry setting, default value is:
+    - count = 3
+    - wait_time = 400ms
+    - max_wait_time = 2000ms
+    """
     def __init__(
             self, 
-            count: int, 
-            wait_time: int, 
-            max_wait_time: int
+            count: int = 3, 
+            wait_time: int = 400, 
+            max_wait_time: int = 2000
     ) -> None:
         self._count = self._validate_and_get_count_value(count)
         self._wait_time = self._validate_and_get_count_value(wait_time)
         self._max_wait_time = self._validate_and_get_count_value(max_wait_time)
 
     def _validate_and_get_count_value(self, count: int) -> int:
+        if count <= 0:
+            raise Exception # invalid count time
         return count
     
     def _validate_and_get_wait_time_value(self, wait_time: int) -> int:
+        if wait_time <=0:
+            raise Exception # invalid wait time
         return wait_time
 
     def _validate_and_get_max_wait_time_value(self, max_wait_time: int) -> int:
-        return max_wait_time
+        if max_wait_time < 0:
+            raise Exception # invalid max wait time
+        return max_wait_time 
 
 class Client:
+    """A wrapper for the http client with the retry settings as an additional feature
+    """
     def __init__(
             self, 
             retry_setting: RetrySettings,
@@ -39,32 +52,53 @@ class Client:
             resource: str, 
             request_body: OnqlaveRequest,
             headers: dict        
-    ): # return a byte array & error
+    ):
         """Send the body data to the resource URL
+
+        Args:
+            resource: a part of the resource url
+            request_body: the request body object
+            headers: a dict contains the http headers
+
+        Return:
+            The jsonified response
         """
         operation = "Http"
         self._logger.debug(messages.HTTP_OPERATION_STARTED,operation,exc_info=1)
         start = datetime.utcnow()
         json_body = request_body._json
-        response = requests.post(
-            url=resource,
-            headers=headers,
-            json=json_body
-        )
+        response = requests.post(url=resource, headers=headers, json=json_body)
         # do something to retry the request
+        if response.status_code == 500:
+            try:
+                response = self.do_request_with_retry(resource=resource,headers=headers, body=json_body)
+            except Exception as exc:
+                raise exc
         if response.status_code == 429:
             raise Exception # return onqlaveerrors.SDKerrorcode
         elif response.status_code >= 400:
             raise Exception
         return response.json()
         
-    def do_request_with_retry(self,resource,body) -> None:
+    def do_request_with_retry(
+            self, 
+            resource: str,
+            headers: dict,
+            body) -> None:
+        """Send request with the specified retry setting to handle the case of server errors
+        Args:
+            resource: a part of the resource url
+            body: the body data of the http request (as dict)
+
+        Returns:
+            The response
+        """
         response = requests.Response()
         for i in range(0,self._retry_setting._count):
-            response = requests.post(url=""+resource,body=body)
+            response = requests.post(url=resource,headers=headers,body=body)
             if response.status_code < 500:
                 return response
             time.sleep(self._retry_setting._max_wait_time)
 
-        return response # should also return the error
+        return response
 

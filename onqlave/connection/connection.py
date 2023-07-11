@@ -6,6 +6,7 @@ from connection.client import RetrySettings,Client
 from contracts.requests.requests import OnqlaveRequest
 from utils.hasher import Hasher
 
+# A list of header constants
 OnqlaveAPIKey         = "ONQLAVE-API-KEY"
 OnqlaveContent        = "Content-Type"
 OnqlaveHost           = "ONQLAVE-HOST"
@@ -22,7 +23,8 @@ Version           = "0.1"
 Oonqlave_Content  = "application/json"
 
 class Configuration:
-
+    """Init an object to store the configuration information
+    """
     def __init__(
             self, 
             credentials: Credential,
@@ -53,7 +55,9 @@ class Connection:
         self._logger = logger
         self._configuration = configuration
 
-    def post(self,resource: str, body: OnqlaveRequest) -> None:
+    def post(self, resource: str, body: OnqlaveRequest) -> None:
+        """Send a request to the Onqlave Platform to fetch the neccessary data for the encryption process
+        """
         operation = "Post"
         start = datetime.utcnow()
         # log the operation
@@ -71,7 +75,7 @@ class Connection:
             OnqlaveDigest: digest,
             OnqlaveVersion: Version
         }
-        # add try-catch
+        
         signature = self._hasher.sign(headers_to_sign,self._configuration._credentials._signing_key)
         
         headers = {
