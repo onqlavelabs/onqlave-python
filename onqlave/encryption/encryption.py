@@ -70,9 +70,7 @@ class Encryption:
             XChacha20poly1305:XChaCha20Poly1305KeyOperation(key_factory=self._xchcha_key_factory)
         }
 
-    # impl setters & getters
 
-    # init encrypt/decrypt operations
     def init_encrypt_operation(self, operation: str):
         """Init the encrypt operation by getting the required data including: algorithm, primitives, keys of the encrypt operation
 
