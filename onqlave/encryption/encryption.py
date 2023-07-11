@@ -208,8 +208,9 @@ class Encryption:
         operation = "DecryptStream"
         
         processor = EncryptedStreamProcessor(cipherstream)
+        cipherstream.seek(0)
         algo = processor.read_header()
-        header, primitive = self.init_decrypt_operation(operation,algo)
+        primitive = self.init_decrypt_operation(operation,algo)
         
         while True:
             try:
