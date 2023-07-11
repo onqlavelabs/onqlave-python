@@ -69,6 +69,10 @@ AlgorithmTypeValue = {
 
 
 class AEAD:
+    """An interface for creating classes that implement the 
+    Authenticated Encryption with Associated Data primitives which
+    combines both encryption and authentication into a single operation.    
+    """
     def encrypt(self, plaintext: bytearray, associated_data: bytearray) -> bytearray:
         raise NotImplementedError
 
@@ -77,6 +81,8 @@ class AEAD:
 
 
 class KeyOperation:
+    """An interface for creating classes that specify key operation
+    """
     def get_format(self):
         raise NotImplementedError
 
@@ -85,6 +91,8 @@ class KeyOperation:
 
 
 class KeyData:
+    """An interface for creating classes that work with Key Data
+    """
     def get_value(self) -> bytearray:
         raise NotImplementedError
 
@@ -102,6 +110,8 @@ class KeyData:
 
 
 class Key:
+    """An interface for creating Key classes 
+    """
     def key_id(self):
         raise NotImplementedError
 
@@ -113,11 +123,15 @@ class Key:
 
 
 class KeyFormat:
+    """An inteface for creating classes that handles various KeyFormat
+    """
     def size(self) -> int:
         raise NotImplementedError
 
 
 class KeyFactory:
+    """An interface for creating various KeyFactory
+    """
     def new_key(self, operation: KeyOperation) -> Key:
         raise NotImplementedError
 
@@ -174,21 +188,23 @@ class Algorithm:
 
 
 class AlgorithmSerialiser():
+    """An object used in the encryption process that specifies
+    the information of the selected encryption algorithm
+    """
     def __init__(self, version: bytes, algo: str, key: bytearray):
         self._version = version
         self._algo = AlgorithmTypeValue[algo].to_bytes(1,byteorder='big')
         self._key = key
 
     def serialise(self) -> bytearray:
-        """Write the data in an Algorithm instance to a bytearray
+        """Write the data of an Algorithm instance to a bytearray
+
+        Args:
+            Nothing
+
+        Returns:
+            an bytearray contains the data related to an algorithm
         """
-        # buffer = bytearray()
-        # header_len = struct.pack(">I", 7 + len(self._key))
-        # buffer.extend(header_len)
-        # buffer.append(self._version) # please check the diff between extend & append
-        # buffer.append(int.from_bytes(self._algo,byteorder='big'))
-        # buffer.append(len(self._key))
-        # buffer.extend(self._key)
         buffer = io.BytesIO()
         header_len = struct.pack(">I", 7 + len(self._key))
         buffer.write(header_len)
@@ -200,12 +216,25 @@ class AlgorithmSerialiser():
 
 
 class AlgorithmDeserialiser():
+    """An object used in the decryption process that specifies
+    the information of the selected encryption algorithm
+    """
     def __init__(self) -> None:
         self._version = None
         self._algo = None
         self._key = None
 
     def deserialise(self, buffer: bytearray) -> int:
+        """Read the information of the selected algorithm written
+        in the buffer
+
+        Args:
+            buffer: a bytearray contains the encoded data of the selected
+            algorithm
+
+        Returns:
+            Nothing
+        """
         if len(buffer) < 7:
             raise Exception # invalid cipher data
         
