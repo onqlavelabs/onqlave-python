@@ -196,7 +196,12 @@ class Encryption:
         """Encrypt the plainstream and output the result into the cipherstream
 
         Args:
-            plain
+            plain_stream: a standard Python stream object contains the plain data
+            cipher_stream: a standard Python stream object contains the encrypted data
+            associated_data: additional data (as a bytearray) for authentication purpose (AEAD)
+
+        Returns:
+            Nothing
         """
         operation = "EncryptStream"
         header, primitive = self.init_encrypt_operation(operation)
@@ -221,6 +226,16 @@ class Encryption:
             plain_stream: io.BytesIO,
             associated_data: bytearray
     ) -> None:
+        """Decrypt the encrypted stream and output the result into the plain stream
+
+        Args:
+            cipher_stream: a standard Python stream object contains the encrypted data
+            plain_stream: a standard Python stream object contains the plain data
+            associated_data: additional data (as a bytearray) for authentication purpose (AEAD)
+
+        Returns:
+            Nothing
+        """
         operation = "DecryptStream"
         
         processor = EncryptedStreamProcessor(cipher_stream)
@@ -237,13 +252,3 @@ class Encryption:
             plain_data = primitive.decrypt(ciphertext, associated_data)
 
             plain_stream.write(plain_data)
-            
-        
-        
-
-    # encrypt/decrypts structure
-    def encrypt_structure(self) -> None:
-        pass
-
-    def derypt_structure(self) -> None:
-        pass
