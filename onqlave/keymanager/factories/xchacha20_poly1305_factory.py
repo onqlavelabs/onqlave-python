@@ -7,12 +7,15 @@ from ..id_service import IDService
 from ..random_service import CSPRNG
 from ..onqlave_types.types import KeyOperation,Key,KeyFormat,KeyFactory
 
+ChaCha20Poly1305KeySize = 32
 class XChaCha20Poly1305KeyFactory(KeyFactory):
     def __init__(self, id_service: IDService, random_service: CSPRNG) -> None:
         self._id_service = id_service
         self._random_service = random_service
 
     def new_key_from_data(self, operation: KeyOperation, key_data: bytearray) -> Key:
+        format = operation.get_format()
+        self.validate_key_format(format)
         return XChaCha20Poly1305Key(
             key_id=self._id_service.new_key_id(),
             operation=operation,
@@ -33,15 +36,21 @@ class XChaCha20Poly1305KeyFactory(KeyFactory):
     
     def validate_key(self, key: Key):
         # validate key version
-
+    
         # validate key value
 
         # validate xchacha key size
-
         raise NotImplementedError
     
     def validate_key_format(self, format: KeyFormat):
-        raise NotImplementedError
+        self.validate_xchacha_key_size(format.size())
+        
+    
+    def validate_xchacha_key_size(self, size_int_byte: int):
+        if size_int_byte != ChaCha20Poly1305KeySize:
+            raise Exception # invalid xchacha key size
+        
+
     
     def validate_key_version(self, version: c_uint32, max_expected: c_uint32) -> bool:
         if version > max_expected:
