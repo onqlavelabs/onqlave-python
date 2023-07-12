@@ -1,11 +1,13 @@
+import logging 
+
 class DebugOption:
-    """A class modeling the configuration of the debug mode
+    """A class modeling the configuration of the debug mode for the Onqlave logger
     """
     def __init__(self, enable_debug: bool) -> None:
         self._debug = enable_debug
     
     def get_debug_option(self) -> bool:
-        return self._debug if self._debug is not None else False
+        return logging.DEBUG if self._debug is not None else logging.INFO
     
     def set_debug_option(self, enable_debug: bool) -> None:
         self._debug = enable_debug
