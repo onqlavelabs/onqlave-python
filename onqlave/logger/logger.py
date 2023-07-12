@@ -2,7 +2,8 @@ import logging
 
 class OnqlaveLogger:
     def __init__(self,level: int) -> None:
-        self._logger = logging.getLogger('onqlave_logger')
+        self._logger = logging.getLogger("Onqlave-SDK")
+        logging.basicConfig()
         self._logger.setLevel(level)
         
     def log_info(self, message):

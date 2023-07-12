@@ -33,9 +33,7 @@ class RSASSAPKCS1SHA:
             randfunc=self._random_service.get_random_bytes
         )
         data_key = pkcs1_oaep.decrypt(wdk)
-        print(data_key)
         return data_key
-        # if no error happens
         
 
         

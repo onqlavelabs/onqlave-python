@@ -1,52 +1,52 @@
 # This is a list of constants for log messages
 SDK = "SDK"
 
-FETCHING_ENCRYPTION_KEY_OPERATION = "[onqlave] SDK: %s - Fetching encryption key"
+FETCHING_ENCRYPTION_KEY_OPERATION = "[onqlave] SDK: {} - Fetching encryption key"
 FETCHING_ENCRYPTION_KEY_RESPONSE_UNMARSHALING_FAILED = (
-    "[onqlave] SDK: %s - Failed unmarshalling encryption key response"
+    "[onqlave] SDK: {} - Failed unmarshalling encryption key response"
 )
 FETCHED_ENCRYPTION_KEY_OPERATION = (
-    "[onqlave] SDK: %s - Fetched encryption key: operation took %s"
+    "[onqlave] SDK: {} - Fetched encryption key: operation took {}"
 )
 
-FETCHING_DECRYPTION_OPERATION = "[onqlave] SDK: %s - Fetching decryption key"
+FETCHING_DECRYPTION_OPERATION = "[onqlave] SDK: {} - Fetching decryption key"
 FETCHING_DECRYPTION_KEY_RESPONSE_UNMARSHALING_FAILED = (
-    "[onqlave] SDK: %s - Failed unmarshalling decryption key response"
+    "[onqlave] SDK: {} - Failed unmarshalling decryption key response"
 )
 FETCHED_DECRYPTION_OPERATION = (
-    "[onqlave] SDK: %s - Fetched decryption key: operation took %s"
+    "[onqlave] SDK: {} - Fetched decryption key: operation took {}"
 )
 
-KEY_INVALID_WRAPPING_ALGO = "[onqlave] SDK: %s - Invalid wrapping algorithm"
-KEY_INVALID_WRAPPING_OPERATION = "[onqlave] SDK: %s - Invalid wrapping operation"
-KEY_UNWRAPPING_KEY_FAILED = "[onqlave] SDK: %s - Failed unwrapping encryption key"
-KEY_INVALID_ENCRYPTION_OPERATION = "[onqlave] SDK: %s - Invalid encryption operation"
-KEY_INVALID_DECRYPTION_OPERATION = "[onqlave] SDK: %s - Invalid encryption operation"
+KEY_INVALID_WRAPPING_ALGO = "[onqlave] SDK: {} - Invalid wrapping algorithm"
+KEY_INVALID_WRAPPING_OPERATION = "[onqlave] SDK: {} - Invalid wrapping operation"
+KEY_UNWRAPPING_KEY_FAILED = "[onqlave] SDK: {} - Failed unwrapping encryption key"
+KEY_INVALID_ENCRYPTION_OPERATION = "[onqlave] SDK: {} - Invalid encryption operation"
+KEY_INVALID_DECRYPTION_OPERATION = "[onqlave] SDK: {} - Invalid encryption operation"
 
-ENCRYPTING_OPERATION = "[onqlave] SDK: %s - Encrypting plain data"
-ENCRYPTED_OPERATION = "[onqlave] SDK: %s - Encrypted plain data: operation took %s"
-ENCRYPTION_OPERATION_FAILED = "[onqlave] SDK: %s - Failed encrypting plain data"
+ENCRYPTING_OPERATION = "[onqlave] SDK: {} - Encrypting plain data"
+ENCRYPTED_OPERATION = "[onqlave] SDK: {} - Encrypted plain data: operation took {}"
+ENCRYPTION_OPERATION_FAILED = "[onqlave] SDK: {} - Failed encrypting plain data"
 
-DECRYPTING_OPERATION = "[onqlave] SDK: %s - Decrypting cipher data"
-DECRYPTED_OPERATION = "[onqlave] SDK: %s - Decrypted cipher data: operation took %s"
-DECRYPTION_OPERATION_FAILED = "[onqlave] SDK: %s - Failed decrypting cipher data"
+DECRYPTING_OPERATION = "[onqlave] SDK: {} - Decrypting cipher data"
+DECRYPTED_OPERATION = "[onqlave] SDK: {} - Decrypted cipher data: operation took {}"
+DECRYPTION_OPERATION_FAILED = "[onqlave] SDK: {} - Failed decrypting cipher data"
 
 CLIENT_ERROR_EXTRACTING_CONTENT = (
-    "[onqlave] SDK: %s - Failed extracting request content"
+    "[onqlave] SDK: {} - Failed extracting request content"
 )
 CLIENT_ERROR_CALCULATING_DIGEST = (
-    "[onqlave] SDK: %s - Failed calculating request digest"
+    "[onqlave] SDK: {} - Failed calculating request digest"
 )
 CLIENT_ERROR_CALCULATING_SIGNATURE = (
-    "[onqlave] SDK: %s - Failed calculating request signature"
+    "[onqlave] SDK: {} - Failed calculating request signature"
 )
-CLIENT_ERROR_PORTING_REQUEST = "[onqlave] SDK: %s - Failed sending %s request"
+CLIENT_ERROR_PORTING_REQUEST = "[onqlave] SDK: {} - Failed sending {} request"
 
-CLIENT_OPERATION_STARTED = "[onqlave] SDK: %s - Sending request started"
+CLIENT_OPERATION_STARTED = "[onqlave] SDK: {} - Sending request started"
 CLIENT_OPERATION_SUCCESS = (
-    "[onqlave] SDK: %s - Sending request finished successfully: operation took %s"
+    "[onqlave] SDK: {} - Sending request finished successfully: operation took {}"
 )
-HTTP_OPERATION_STARTED = "[onqlave] SDK: %s - Http operation started"
+HTTP_OPERATION_STARTED = "[onqlave] SDK: {} - Http operation started"
 HTTP_OPERATION_SUCCESS = (
-    "[onqlave] SDK: %s - Http operation finished successfully: operation took %s"
+    "[onqlave] SDK: {} - Http operation finished successfully: operation took {}"
 )
