@@ -8,6 +8,7 @@ from utils.hasher import Hasher
 from logger.logger import OnqlaveLogger
 from contracts.requests.requests import EncryptionOpenRequest, DecryptionOpenRequest
 from connection.connection import Connection,Configuration
+from encryption.options import DebugOption
 from keymanager.factories.rsa_ssa_pkcs1_sha_factory import RSASSAPKCS1SHAKeyFactory
 from keymanager.random_service import CSPRNG
 from keymanager.onqlave_types.types import RsaSsapkcs12048sha256f4
@@ -36,7 +37,9 @@ class KeyManager:
     def __init__(
             self, 
             configuration: Configuration,
-            random_service: CSPRNG) -> None:
+            random_service: CSPRNG,
+            debug_option: DebugOption
+            ) -> None:
         """Instantiates a key manager
 
         Args:
@@ -48,7 +51,7 @@ class KeyManager:
         """
         # hasher:
         self._hasher = Hasher()
-        self._logger = OnqlaveLogger(logging.DEBUG)
+        self._logger = OnqlaveLogger(debug_option.get_debug_option())
         self._index = "some value related to the arx url"
         self._config = configuration
         self._http_client = Connection(

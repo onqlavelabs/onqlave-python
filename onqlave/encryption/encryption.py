@@ -13,6 +13,8 @@ from credentials.credentials import Credential
 from encryption.plain_stream_processor import PlainStreamProcessor
 from encryption.encrypted_stream_processor import EncryptedStreamProcessor
 
+from logger.logger import OnqlaveLogger
+
 from keymanager.onqlave_types.types import Aesgcm128,Aesgcm256,XChacha20poly1305
 from keymanager.onqlave_types.types import AlgorithmSerialiser, AlgorithmDeserialiser
 from keymanager.factories.aes_gcm_factory import AEADGCMKeyFactory
@@ -45,10 +47,10 @@ class Encryption:
         Returns:
             Nothing
         """
-        self._logger = logging.getLogger(self.__class__.__name__)
+        self._logger = OnqlaveLogger(debug_option.get_debug_option())
         # random service
         self._csprng = CSPRNG()
-        # id gen
+        
         self._id_generator = IDService(self._csprng)
         index = arx_option.get_arx_url().rindex("/") # do sth to find the last index of the "/"
         arx_url = arx_option.get_arx_url()[:index]
@@ -59,10 +61,21 @@ class Encryption:
             arx_url=arx_url, 
             arx_id=arx_id
         )
-        self._key_mamanger = KeyManager(configuration=self._option,random_service=self._csprng)
+        self._key_mamanger = KeyManager(
+            configuration=self._option,
+            random_service=self._csprng,
+            debug_option=debug_option
+        )
         
-        self._aead_gcm_key_factory = AEADGCMKeyFactory(id_service=self._id_generator, random_service=self._csprng)
-        self._xchcha_key_factory = XChaCha20Poly1305KeyFactory(id_service=self._id_generator, random_service=self._csprng)
+        self._aead_gcm_key_factory = AEADGCMKeyFactory(
+            id_service=self._id_generator, 
+            random_service=self._csprng
+        )
+
+        self._xchcha_key_factory = XChaCha20Poly1305KeyFactory(
+            id_service=self._id_generator, 
+            random_service=self._csprng
+        )
 
         self._operations = {
             Aesgcm128:AesGcmKeyOperation(key_factory=self._aead_gcm_key_factory),
