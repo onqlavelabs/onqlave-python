@@ -4,6 +4,7 @@ from datetime import datetime
 from credentials.credentials import Credential
 from connection.client import RetrySettings,Client
 from contracts.requests.requests import OnqlaveRequest
+from logger.logger import OnqlaveLogger
 from utils.hasher import Hasher
 
 # A list of header constants
@@ -47,7 +48,7 @@ class Connection:
         self, 
         configuration: Configuration,
         hasher: Hasher,
-        logger: any            
+        logger: OnqlaveLogger            
     ):
         self._retry_settings = configuration._retry_settings
         self._client = Client(self._retry_settings,logger)

@@ -1,5 +1,19 @@
 import logging
 
-class OnqlaveLogging(logging):
-    def __init__(self,) -> None:
-        super().__init__()
+class OnqlaveLogger:
+    def __init__(self,level: int) -> None:
+        self._logger = logging.getLogger('onqlave_logger')
+        self._logger.setLevel(level)
+        
+    def log_info(self, message):
+        self._logger.info(message)
+
+    def log_debug(self, message):
+        self._logger.debug(message)
+
+    def log_error(self, message):
+        self._logger.error(message)
+
+    def log_critical(self, message):
+        self._logger.critical(message)
+        
