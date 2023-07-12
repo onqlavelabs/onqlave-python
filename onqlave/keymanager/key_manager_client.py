@@ -5,7 +5,7 @@ from datetime import datetime
 # from credentials.credentials import Credential
 # from connection.client import RetrySettings
 from utils.hasher import Hasher
-# from logger.logger import OnqlaveLogging
+from logger.logger import OnqlaveLogger
 from contracts.requests.requests import EncryptionOpenRequest, DecryptionOpenRequest
 from connection.connection import Connection,Configuration
 from keymanager.factories.rsa_ssa_pkcs1_sha_factory import RSASSAPKCS1SHAKeyFactory
@@ -44,7 +44,7 @@ class KeyManager:
         """
         # hasher:
         self._hasher = Hasher()
-        self._logger = logging.getLogger(self.__class__.__name__)
+        self._logger = OnqlaveLogger(logging.DEBUG)
         self._index = "some value related to the arx url"
         self._config = configuration
         self._http_client = Connection(

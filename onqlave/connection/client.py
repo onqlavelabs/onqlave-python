@@ -2,7 +2,10 @@ import logging
 import requests
 import time 
 from datetime import datetime
+
 from contracts.requests.requests import OnqlaveRequest
+from logger.logger import OnqlaveLogger
+
 from messages import messages
 class RetrySettings:
     """A class for initializing the retry setting, default value is:
@@ -41,11 +44,10 @@ class Client:
     def __init__(
             self, 
             retry_setting: RetrySettings,
-            logger: any, 
+            logger: OnqlaveLogger, 
     ) -> None:
-        self._logger = logging.getLogger() # init Onqlave logger here
-        # self._client = requests # init a http client here
-        self._retry_setting = retry_setting # init a retry setting instance here
+        self._logger = logger
+        self._retry_setting = retry_setting
 
     def post(
             self, 
@@ -64,7 +66,8 @@ class Client:
             The jsonified response
         """
         operation = "Http"
-        self._logger.debug(messages.HTTP_OPERATION_STARTED,operation,exc_info=1)
+
+        self._logger.log_debug(messages.HTTP_OPERATION_STARTED.format(operation))
         start = datetime.utcnow()
         json_body = request_body._json
         response = requests.post(url=resource, headers=headers, json=json_body)
@@ -78,6 +81,9 @@ class Client:
             raise Exception # return onqlaveerrors.SDKerrorcode
         elif response.status_code >= 400:
             raise Exception
+        
+        self._logger.log_debug(messages.HTTP_OPERATION_SUCCESS.format(operation,(datetime.utcnow() - start).seconds))
+
         return response.json()
         
     def do_request_with_retry(
