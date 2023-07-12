@@ -12,6 +12,7 @@ from keymanager.factories.rsa_ssa_pkcs1_sha_factory import RSASSAPKCS1SHAKeyFact
 from keymanager.random_service import CSPRNG
 from keymanager.onqlave_types.types import RsaSsapkcs12048sha256f4
 from keymanager.operations.rsa_ssa_pkcs1_sha_operation import RsaSsaPkcs1Sha2562048KeyOperation
+from messages import messages
 from errors.errors import OnqlaveError
 
 
@@ -32,7 +33,10 @@ class KeyManager:
     - Fetch encryption/decryption key
     - Unwrap the fetched encryption/decryption key
     """
-    def __init__(self, configuration: Configuration ,random_service: CSPRNG) -> None:
+    def __init__(
+            self, 
+            configuration: Configuration,
+            random_service: CSPRNG) -> None:
         """Instantiates a key manager
 
         Args:
@@ -78,8 +82,7 @@ class KeyManager:
         request = EncryptionOpenRequest(body_data={})
         # log debug with message = fetching encryption key operation
         data = self._http_client.post(resource=ENCRYPT_RESOURCE_URL,body=request)
-        # validate data
-        # these thing needs to be replaced with onqlave response object
+        
         edk = base64.b64decode(data['data_key']['encrypted_data_key'])
         wdk = base64.b64decode(data['data_key']['wrapped_data_key'])
         epk = base64.b64decode(data['wrapping_key']['encrypted_private_key']).decode('ISO-8859-1')
@@ -94,7 +97,6 @@ class KeyManager:
             wdk=wdk,
             epk=epk,
             fp=fp,
-            # password=bytearray(self._config._credentials._secret_key,'ISO-8859-1')
             password = self._config._credentials._secret_key
         )
         # decode data including: edk, wdk, epk, fp
@@ -128,9 +130,12 @@ class KeyManager:
         factory = wrapping_operation.get_factory()
         primitive = factory.primitive(wrapping_operation)
         # check if primitive assignment had some errors
-        dk = primitive.unwrap_key(
-            wdk=wdk,epk=epk,fp=fp,password=password
-        )
+        try:
+            dk = primitive.unwrap_key(
+                wdk=wdk,epk=epk,fp=fp,password=password
+            )
+        except Exception as exc:
+            raise exc
         return dk
 
     def fetch_decryption_key(self,edk: bytearray):
@@ -148,14 +153,13 @@ class KeyManager:
         request = DecryptionOpenRequest(
             body_data={
                 "encrypted_data_key":base64.b64encode(edk).decode('utf-8')
-            }
-            # equivalent Go code: 
-            # request := requests.DecryptionOpenRequest{
-		    # EDK: base64.StdEncoding.EncodeToString(edk),}
-	        
+            }	        
         )
-        # should try-catch this command
-        data = self._http_client.post(resource=DECRYPT_RESOURCE_URL,body=request)
+        
+        try:
+            data = self._http_client.post(resource=DECRYPT_RESOURCE_URL,body=request)
+        except Exception as exc:
+            raise exc
 
         wdk = base64.b64decode(data['data_key']['wrapped_data_key'])
         epk = base64.b64decode(data['wrapping_key']['encrypted_private_key']).decode("ISO-8859-1")
@@ -170,9 +174,8 @@ class KeyManager:
             password=self._config._credentials._secret_key
         )
         # log a debug line for the fetch decryption key operation
+        self._logger.log_debug(messages.FETCHED_DECRYPTION_OPERATION.format(operation,(datetime.utcnow()-start).seconds))
         return dk
-
-        # print a debug line for fetching the decryption ope
 
 
 
