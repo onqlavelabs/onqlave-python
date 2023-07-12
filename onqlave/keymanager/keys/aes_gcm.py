@@ -1,7 +1,7 @@
-from keymanager.onqlave_types.types import KeyOperation, KeyMaterialType, KeyID
+from keymanager.onqlave_types.types import Key, KeyOperation, KeyMaterialType, KeyID, KeyData
 
 
-class AesGcmKeyData:
+class AesGcmKeyData(KeyData):
     """A class defines the blueprint for the AES (GCM mode) key data
     """
     def __init__(
@@ -10,19 +10,12 @@ class AesGcmKeyData:
             key_material_type: KeyMaterialType, 
             version: int
     ) -> None:
-        self._type_url = None
         self._value = value
         self._key_material_type = key_material_type
         self._version = version
-
-    def from_value(self):
-        return None
     
     def get_value(self):
         return self._value
-    
-    def get_type_url(self):
-        return self._type_url
     
     def get_key_material_type(self):
         return self._key_material_type
@@ -31,7 +24,7 @@ class AesGcmKeyData:
         return self._version
 
 
-class AesGcmKey:
+class AesGcmKey(Key):
     """A class defines the blueprint for the AES (GCM mode) key
     """
     def __init__(

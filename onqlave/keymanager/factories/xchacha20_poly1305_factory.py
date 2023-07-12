@@ -3,6 +3,7 @@ from ctypes import c_uint32
 from keymanager.onqlave_types.types import Key, KeyOperation, KeyMaterialSYMMETRIC
 from keymanager.keys.xchacha_20_poly_1350 import XChaCha20Poly1305KeyData, XChaCha20Poly1305Key
 from keymanager.primitives.xchacha20_poly1305_aead import XChaCha20Poly1305AEAD
+from keymanager.operations.xchacha20_poly1305_operation import XchaCha20Poly1305KeyVersion
 from ..id_service import IDService
 from ..random_service import CSPRNG
 from ..onqlave_types.types import KeyOperation,Key,KeyFormat,KeyFactory
@@ -26,21 +27,25 @@ class XChaCha20Poly1305KeyFactory(KeyFactory):
             )
         )
     
-    def primitive(self, key: Key):
+    def primitive(self, key: XChaCha20Poly1305Key):
         # validate the key
+        self.validate_key(key)
         ret = XChaCha20Poly1305AEAD(
             key=key,
             random_service=self._random_service
         )
         return ret
     
-    def validate_key(self, key: Key):
+    def validate_key(self, key: XChaCha20Poly1305Key):
         # validate key version
-    
+        if not self.validate_key_version(key.data().get_version(),XchaCha20Poly1305KeyVersion):
+            raise Exception # invalid key version
         # validate key value
-
-        # validate xchacha key size
-        raise NotImplementedError
+        try:
+            key_value = key.data().get_value()
+            self.validate_xchacha_key_size(len(key_value))
+        except Exception as exc:
+            raise exc # invalid key value
     
     def validate_key_format(self, format: KeyFormat):
         self.validate_xchacha_key_size(format.size())
@@ -50,14 +55,9 @@ class XChaCha20Poly1305KeyFactory(KeyFactory):
         if size_int_byte != ChaCha20Poly1305KeySize:
             raise Exception # invalid xchacha key size
         
-
-    
+        
     def validate_key_version(self, version: c_uint32, max_expected: c_uint32) -> bool:
         if version > max_expected:
             return False
         return True
     
-    def validate_key_size(self, size_in_bytes: c_uint32) -> bool:
-        if size_in_bytes != 32: # need to double check this because golang SDK use constant from other lib
-            return False
-        return True
