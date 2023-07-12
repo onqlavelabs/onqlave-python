@@ -66,12 +66,12 @@ class Client:
             The jsonified response
         """
         operation = "Http"
-
         self._logger.log_debug(messages.HTTP_OPERATION_STARTED.format(operation))
         start = datetime.utcnow()
+        
         json_body = request_body._json
         response = requests.post(url=resource, headers=headers, json=json_body)
-        # do something to retry the request
+        # retry the request if serverside errors occured
         if response.status_code == 500:
             try:
                 response = self.do_request_with_retry(resource=resource,headers=headers, body=json_body)
@@ -82,7 +82,8 @@ class Client:
         elif response.status_code >= 400:
             raise Exception
         
-        self._logger.log_debug(messages.HTTP_OPERATION_SUCCESS.format(operation,(datetime.utcnow() - start).seconds))
+        finish = datetime.utcnow()
+        self._logger.log_debug(messages.HTTP_OPERATION_SUCCESS.format(operation,str(f'{(finish-start).seconds} secs and {(finish-start).microseconds} microsecs')))
 
         return response.json()
         

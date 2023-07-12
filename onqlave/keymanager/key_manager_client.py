@@ -102,7 +102,8 @@ class KeyManager:
             fp=fp,
             password = self._config._credentials._secret_key
         )
-        # decode data including: edk, wdk, epk, fp
+        finish = datetime.utcnow()
+        self._logger.log_debug(messages.FETCHED_ENCRYPTION_KEY_OPERATION.format(operation,str(f'{(finish-start).seconds} secs and {(finish-start).microseconds} microsecs')))
         return edk,dk,algorithm
     
     def unwrap_key(
@@ -177,7 +178,8 @@ class KeyManager:
             password=self._config._credentials._secret_key
         )
         # log a debug line for the fetch decryption key operation
-        self._logger.log_debug(messages.FETCHED_DECRYPTION_OPERATION.format(operation,(datetime.utcnow()-start).seconds))
+        finish = datetime.utcnow()
+        self._logger.log_debug(messages.FETCHED_DECRYPTION_OPERATION.format(operation,str(f'{(finish-start).seconds} secs and {(finish-start).microseconds} microsecs')))
         return dk
 
 

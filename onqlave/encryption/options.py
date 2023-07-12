@@ -7,7 +7,7 @@ class DebugOption:
         self._debug = enable_debug
     
     def get_debug_option(self) -> bool:
-        return logging.DEBUG if self._debug is not None else logging.INFO
+        return logging.DEBUG if self._debug else logging.INFO
     
     def set_debug_option(self, enable_debug: bool) -> None:
         self._debug = enable_debug

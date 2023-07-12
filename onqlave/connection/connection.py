@@ -5,6 +5,7 @@ from credentials.credentials import Credential
 from connection.client import RetrySettings,Client
 from contracts.requests.requests import OnqlaveRequest
 from logger.logger import OnqlaveLogger
+from messages import messages
 from utils.hasher import Hasher
 
 # A list of header constants
@@ -62,6 +63,7 @@ class Connection:
         operation = "Post"
         start = datetime.utcnow()
         # log the operation
+        self._logger.log_debug(messages.CLIENT_OPERATION_STARTED.format(operation))
         url_string = self._configuration._arx_url + "/" + resource
         arx_id = self._configuration._arx_id
 
@@ -92,12 +94,6 @@ class Connection:
             OnqlaveSignature: signature
         }
         response = self._client.post(url_string,request_body=body, headers=headers)
-        return response # need to handle errors later
-
-# {
-# 	"access_key": "onq.JlnL5YDsC8O6NperEMNdf0DM7vaYHhl5",
-# 	"arx_url": "https://gcp.community.serverless.au.dp0.onqlave.com/cluster--Qludg9OeHwhtGGbd8LSPB",
-# 	"server_signing_key": "onq.GZDANwPQ2VY2XzfaxEq7eq9mfPoUjHKv",
-# 	"server_secret_key": "onq.26j0WfMlQnPUYGdcyceq6a1raJd8JacJKltWe6Towlox91zlGiupL7FtdYUl0Rr6PKl3e3gS7oYU3364Wt8r4Q9KRD4zwSMuCQI9aJbsptPGYTnnBOURjjORPpVSsake",
-# 	"client_key": ""
-# }
+        finish = datetime.utcnow()
+        self._logger.log_debug(messages.CLIENT_OPERATION_SUCCESS.format(operation,str(f'{(finish-start).seconds} secs and {(finish-start).microseconds} microsecs')))
+        return response

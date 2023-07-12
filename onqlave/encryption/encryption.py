@@ -23,6 +23,8 @@ from keymanager.operations.aes_128_gcm_operation import AesGcmKeyOperation
 from keymanager.operations.aes_256_gcm_operation import Aes256GcmKeyOperation
 from keymanager.operations.xchacha20_poly1305_operation import XChaCha20Poly1305KeyOperation
 
+from messages import messages
+
 
 class Encryption:
     """A class that models the encryption services with 2 main groups of features:
@@ -120,6 +122,7 @@ class Encryption:
         """
         # get the decryption key
         # add a try catch here
+
         dk = self._key_mamanger.fetch_decryption_key(algo._key)
 
         # maybe some try-catch here too
@@ -148,21 +151,23 @@ class Encryption:
 
         """
         operation = "Encrypt"
-        
+        start = datetime.utcnow()
+        self._logger.log_debug(messages.ENCRYPTING_OPERATION.format(operation))
         header, primitive = self.init_encrypt_operation(operation=operation)
         
         cipher_data = primitive.encrypt(
             plaintext=plaintext,
             associated_data=associated_data 
         ) # should try-catch error if neccessary
-        print(f"cipher data = {cipher_data}")
+        
         
         cipher_stream = io.BytesIO()
         processor = PlainStreamProcessor(cipher_stream=cipher_stream)
         processor.write_header(header)
         processor.write_packet(cipher_data)
         
-        # log a debug line here
+        finish = datetime.utcnow()
+        self._logger.log_debug(messages.ENCRYPTED_OPERATION.format(operation,str(f'{(finish-start).seconds} secs and {(finish-start).microseconds} microsecs')))
         return cipher_stream.getvalue()
 
     def derypt(self, cipher_data: bytearray, associated_data: bytearray):
@@ -178,7 +183,7 @@ class Encryption:
         """
         operation = "Decrypt"
         start = datetime.utcnow()
-        # log a ebug line for starting the decrypt operation
+        self._logger.log_debug(messages.DECRYPTING_OPERATION.format(operation))
 
         cipher_stream = io.BytesIO(initial_bytes=cipher_data)
         processor = EncryptedStreamProcessor(cipher_stream)
@@ -188,6 +193,7 @@ class Encryption:
         # maybe this one need try-catch?
         primitive = self.init_decrypt_operation(operation, algo)
 
+        
         # this one needs try-catch?
         cipher = processor.read_packet()
         
@@ -195,6 +201,9 @@ class Encryption:
         plain_data = primitive.decrypt(cipher, associated_data)
 
         # log a debug line
+
+        finish = datetime.utcnow()
+        self._logger.log_debug(messages.DECRYPTED_OPERATION.format(operation,str(f'{(finish-start).seconds} secs and {(finish-start).microseconds} microsecs')))
         return plain_data
 
     # encrypt/decrypt stream
@@ -215,6 +224,9 @@ class Encryption:
             Nothing
         """
         operation = "EncryptStream"
+        start = datetime.utcnow()
+        self._logger.log_debug(messages.ENCRYPTING_OPERATION.format(operation))
+        
         header, primitive = self.init_encrypt_operation(operation)
         processor = PlainStreamProcessor(cipher_stream)
         processor.write_header(header)
@@ -228,6 +240,10 @@ class Encryption:
             
             cipher_text = primitive.encrypt(temp_buffer[:data_len],associated_data)
             processor.write_packet(cipher_text)
+
+        finish = datetime.utcnow()
+        self._logger.log_debug(messages.ENCRYPTED_OPERATION.format(operation,str(f'{(finish-start).seconds} secs and {(finish-start).microseconds} microsecs')))
+
             
 
 
@@ -248,7 +264,9 @@ class Encryption:
             Nothing
         """
         operation = "DecryptStream"
-        
+        start = datetime.utcnow()
+        self._logger.log_debug(messages.DECRYPTING_OPERATION.format(operation))
+
         processor = EncryptedStreamProcessor(cipher_stream)
         cipher_stream.seek(0)
         algo = processor.read_header()
@@ -263,3 +281,5 @@ class Encryption:
             plain_data = primitive.decrypt(ciphertext, associated_data)
 
             plain_stream.write(plain_data)
+        finish = datetime.utcnow()
+        self._logger.log_debug(messages.DECRYPTED_OPERATION.format(operation,str(f'{(finish-start).seconds} secs and {(finish-start).microseconds} microsecs')))
