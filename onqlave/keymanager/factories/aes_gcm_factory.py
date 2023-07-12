@@ -16,7 +16,6 @@ class AEADGCMKeyFactory(KeyFactory):
     def __init__(self, id_service: IDService, random_service: CSPRNG) -> None:
         self._id_service = id_service
         self._random_service = random_service
-        # do something here to create new key ???
 
     def new_key(self,operation: KeyOperation):
         format = operation.get_format()
@@ -45,16 +44,14 @@ class AEADGCMKeyFactory(KeyFactory):
         if key_value is None:
             return False
         # validate aes key size
-        key_size = len(key_value) # should caset to uint32
+        key_size = len(key_value)
         if not validate_aes_key_size(key_size):
-            return False # check this
-        
+            return False        
         return True
 
 
     def validate_key_version(self,version: c_uint32, max_expected: c_uint32) -> bool:
         if version > max_expected:
-            print("should return error")
             return False
         return True
     
@@ -65,8 +62,10 @@ class AEADGCMKeyFactory(KeyFactory):
     
     def primitive(self, key: Key) -> any:
         if not self.validate_key(key):
-            return None # or raise exc
-        ret = AESGCMAEAD(key=key,random_service=self._random_service)
-        # need to handle the exception here
+            return None
+        try:
+            ret = AESGCMAEAD(key=key,random_service=self._random_service)
+        except Exception as exc:
+            raise exc # invalid primitive data
         return ret
         

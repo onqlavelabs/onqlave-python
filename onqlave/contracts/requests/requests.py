@@ -15,7 +15,6 @@ class EncryptionOpenRequest(OnqlaveRequest):
         super().__init__(body_data=body_data)
         
     def get_content(self):
-        # raise NotImplementedError # return json.marshal(r)
         return json.dumps(self._json)
         
 
