@@ -1,9 +1,9 @@
-import logging
 import requests
 import time 
 import urllib.request
 import json 
-import http.client
+import asyncio
+import aiohttp
 
 from datetime import datetime
 
@@ -74,30 +74,17 @@ class Client:
         start = datetime.utcnow()
         
         json_body = request_body._json
-
-        start_request = datetime.utcnow()
-        request = urllib.request.Request(url=resource, headers=headers, data=json.dumps(json_body).encode('utf-8'))
-        start_request = datetime.utcnow()
-        response = urllib.request.urlopen(request)
-        response_data = response.read().decode('utf-8')
-        result = json.loads(response_data)
-        finish_request = datetime.utcnow()
-        self._logger.log_debug("sending request... done {} {}".format(operation,str(f'{(finish_request-start_request).seconds} secs and {(finish_request-start_request).microseconds} microsecs')))
-
-        if response.status == 500:
-            try:
-                response = self.do_request_with_retry(resource=resource,headers=headers, body=json_body)
-            except Exception as exc:
-                raise exc
-        if response.status == 429:
-            raise Exception # return onqlaveerrors.SDKerrorcode
-        elif response.status >= 400:
-            raise Exception
         
+        request = urllib.request.Request(url=resource, headers=headers, data=json.dumps(json_body).encode('utf-8'))
+        response = urllib.request.urlopen(request)
+    
+        response_data = response.read().decode('utf-8')
+        result = json.loads(response_data) 
         finish = datetime.utcnow()
         self._logger.log_debug(messages.HTTP_OPERATION_SUCCESS.format(operation,str(f'{(finish-start).seconds} secs and {(finish-start).microseconds} microsecs')))
         return result
-        
+
+
     def do_request_with_retry(
             self, 
             resource: str,
@@ -113,9 +100,12 @@ class Client:
         """
         response = requests.Response()
         for i in range(0,self._retry_setting._count):
-            response = requests.post(url=resource,headers=headers,body=body)
-            if response.status_code < 500:
-                return response
+            request = urllib.request.Request(url=resource, headers=headers, data=json.dumps(body).encode('utf-8'))
+            response = urllib.request.urlopen(request)
+            response_data = response.read().decode('utf-8')
+            result = json.loads(response_data)
+            if response.status < 500:
+                return result
             time.sleep(self._retry_setting._max_wait_time)
 
         return response

@@ -127,7 +127,8 @@ class KeyManager:
 
         Returns:
             The unwrapped data key
-        """ 
+        """
+        start = datetime.utcnow()
         wrapping_operation = self._operations[wrapping_algorithm]
         if wrapping_operation is None:
             return None
@@ -140,6 +141,8 @@ class KeyManager:
             )
         except Exception as exc:
             raise exc
+        finish = datetime.utcnow()
+        self._logger.log_debug("Key unwrap operation took {}".format(str(f'{(finish-start).seconds} secs and {(finish-start).microseconds} microsecs')))
         return dk
 
     def fetch_decryption_key(self,edk: bytearray):
@@ -169,6 +172,7 @@ class KeyManager:
         epk = base64.b64decode(data['wrapping_key']['encrypted_private_key']).decode("ISO-8859-1")
         fp = base64.b64decode(data['wrapping_key']['key_fingerprint'])
         wrapping_algorithm = data['security_model']['wrapping_algo']
+        
         dk = self.unwrap_key(
             wrapping_algorithm=wrapping_algorithm,
             operation=operation,
