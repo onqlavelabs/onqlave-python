@@ -1,6 +1,10 @@
 import logging
 import requests
 import time 
+import urllib.request
+import json 
+import http.client
+
 from datetime import datetime
 
 from contracts.requests.requests import OnqlaveRequest
@@ -70,22 +74,29 @@ class Client:
         start = datetime.utcnow()
         
         json_body = request_body._json
-        response = requests.post(url=resource, headers=headers, json=json_body)
-        # retry the request if serverside errors occured
-        if response.status_code == 500:
+
+        start_request = datetime.utcnow()
+        request = urllib.request.Request(url=resource, headers=headers, data=json.dumps(json_body).encode('utf-8'))
+        start_request = datetime.utcnow()
+        response = urllib.request.urlopen(request)
+        response_data = response.read().decode('utf-8')
+        result = json.loads(response_data)
+        finish_request = datetime.utcnow()
+        self._logger.log_debug("sending request... done {} {}".format(operation,str(f'{(finish_request-start_request).seconds} secs and {(finish_request-start_request).microseconds} microsecs')))
+
+        if response.status == 500:
             try:
                 response = self.do_request_with_retry(resource=resource,headers=headers, body=json_body)
             except Exception as exc:
                 raise exc
-        if response.status_code == 429:
+        if response.status == 429:
             raise Exception # return onqlaveerrors.SDKerrorcode
-        elif response.status_code >= 400:
+        elif response.status >= 400:
             raise Exception
         
         finish = datetime.utcnow()
         self._logger.log_debug(messages.HTTP_OPERATION_SUCCESS.format(operation,str(f'{(finish-start).seconds} secs and {(finish-start).microseconds} microsecs')))
-
-        return response.json()
+        return result
         
     def do_request_with_retry(
             self, 
