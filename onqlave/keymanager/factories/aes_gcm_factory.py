@@ -1,13 +1,13 @@
-from keymanager.id_service import IDService
+from onqlave.keymanager.id_service import IDService
 from ctypes import c_uint32
-from keymanager.random_service import CSPRNG
-from keymanager.onqlave_types.types import KeyOperation, Key, KeyFormat, KeyFactory
-from keymanager.primitives.aes_gcm_aead import validate_aes_key_size, AESGCMAEAD
-from keymanager.keys.aes_gcm import AesGcmKey,AesGcmKeyData
-from keymanager.id_service import IDService
-from keymanager.onqlave_types.types import Key, KeyOperation, KeyMaterialSYMMETRIC
-from keymanager.onqlave_types.types import Key
-from keymanager.operations.aes_128_gcm_operation import AESGCMKeyVersion
+from onqlave.keymanager.random_service import CSPRNG
+from onqlave.keymanager.onqlave_types.types import KeyOperation, Key, KeyFormat, KeyFactory
+from onqlave.keymanager.primitives.aes_gcm_aead import validate_aes_key_size, AESGCMAEAD
+from onqlave.keymanager.keys.aes_gcm import AesGcmKey,AesGcmKeyData
+from onqlave.keymanager.id_service import IDService
+from onqlave.keymanager.onqlave_types.types import Key, KeyOperation, KeyMaterialSYMMETRIC
+from onqlave.keymanager.onqlave_types.types import Key
+from onqlave.keymanager.operations.aes_128_gcm_operation import AESGCMKeyVersion
 
 
 class AEADGCMKeyFactory(KeyFactory):

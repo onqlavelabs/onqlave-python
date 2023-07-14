@@ -1,12 +1,12 @@
 from ctypes import c_uint32
 
-from keymanager.onqlave_types.types import Key, KeyOperation, KeyMaterialSYMMETRIC
-from keymanager.keys.xchacha_20_poly_1350 import XChaCha20Poly1305KeyData, XChaCha20Poly1305Key
-from keymanager.primitives.xchacha20_poly1305_aead import XChaCha20Poly1305AEAD
-from keymanager.operations.xchacha20_poly1305_operation import XchaCha20Poly1305KeyVersion
-from ..id_service import IDService
-from ..random_service import CSPRNG
-from ..onqlave_types.types import KeyOperation,Key,KeyFormat,KeyFactory
+from onqlave.keymanager.onqlave_types.types import Key, KeyOperation, KeyMaterialSYMMETRIC
+from onqlave.keymanager.keys.xchacha_20_poly_1350 import XChaCha20Poly1305KeyData, XChaCha20Poly1305Key
+from onqlave.keymanager.primitives.xchacha20_poly1305_aead import XChaCha20Poly1305AEAD
+from onqlave.keymanager.operations.xchacha20_poly1305_operation import XchaCha20Poly1305KeyVersion
+from onqlave.keymanager.id_service import IDService
+from onqlave.keymanager.random_service import CSPRNG
+from onqlave.keymanager.onqlave_types.types import KeyOperation,Key,KeyFormat,KeyFactory
 
 ChaCha20Poly1305KeySize = 32
 class XChaCha20Poly1305KeyFactory(KeyFactory):

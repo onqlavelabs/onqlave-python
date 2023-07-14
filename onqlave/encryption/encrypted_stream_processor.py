@@ -1,6 +1,6 @@
 import io
 
-from keymanager.onqlave_types.types import AlgorithmDeserialiser
+from onqlave.keymanager.onqlave_types.types import AlgorithmDeserialiser
 
 class EncryptedStreamProcessor:
     """A stream processor for the encrypted stream in the decryption process

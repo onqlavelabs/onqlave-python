@@ -13,9 +13,9 @@ except ValueError: # Already removed
     pass
 
 from encryption import options
-from encryption.encryption import Encryption
-from credentials.credentials import Credential
-from connection.client import RetrySettings
+from onqlave.encryption.encryption import Encryption
+from onqlave.credentials.credentials import Credential
+from onqlave.connection.client import RetrySettings
 
 # these data are generated when you create your api key in Onqlave Platform
 # you should figure out an appropriate way to include them in your code as env variables

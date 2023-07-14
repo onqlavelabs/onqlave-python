@@ -1,8 +1,8 @@
 import sys
 
 from Crypto.Cipher import ChaCha20_Poly1305
-from keymanager.random_service import CSPRNG
-from keymanager.onqlave_types.types import Key, AEAD
+from onqlave.keymanager.random_service import CSPRNG
+from onqlave.keymanager.onqlave_types.types import Key, AEAD
 
 Poly1305TagSize = 16
 MAX_INT = sys.maxsize

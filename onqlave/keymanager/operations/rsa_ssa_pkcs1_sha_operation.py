@@ -1,5 +1,5 @@
 from ctypes import c_uint32
-from keymanager.onqlave_types.types import HashType,HashTypeSHA256,KeyOperation, KeyFactory, KeyFormat
+from onqlave.keymanager.onqlave_types.types import HashType,HashTypeSHA256,KeyOperation, KeyFactory, KeyFormat
 class RsaSsaPkcs1KeyFormat(KeyFormat):
     def __init__(self, version: c_uint32, hash: HashType) -> None:
         self._version = version

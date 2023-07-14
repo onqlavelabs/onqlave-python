@@ -1,7 +1,7 @@
 from ctypes import c_uint32
 
-from keymanager.onqlave_types.types import KeyID
-from keymanager.random_service import CSPRNG
+from onqlave.keymanager.onqlave_types.types import KeyID
+from onqlave.keymanager.random_service import CSPRNG
 class IDService:
     """A class defining the ID generation service
     """

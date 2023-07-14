@@ -1,7 +1,7 @@
 import io
 import struct
 
-from keymanager.onqlave_types.types import AlgorithmSerialiser
+from onqlave.keymanager.onqlave_types.types import AlgorithmSerialiser
 class PlainStreamProcessor:
     """A stream processor for the plain stream in the encryption process
     with two function including writing the header and writing the packet.
