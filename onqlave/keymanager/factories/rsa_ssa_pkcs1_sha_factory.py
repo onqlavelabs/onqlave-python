@@ -1,13 +1,13 @@
 from hashlib import sha1,sha224,sha256,sha384,sha512
-from keymanager.random_service import CSPRNG
+from onqlave.keymanager.random_service import CSPRNG
 from ctypes import c_int32
-from keymanager.onqlave_types.types import HashTypeName,KeyFactory
-from keymanager.onqlave_types.types import AEAD, Key,KeyOperation
-from keymanager.operations.rsa_ssa_pkcs1_sha_operation import RsaSsaPkcs1Sha2562048KeyOperation
-from keymanager.primitives.rsa_ssa_pkcs1_sha import RSASSAPKCS1SHA
+from onqlave.keymanager.onqlave_types.types import HashTypeName,KeyFactory
+from onqlave.keymanager.onqlave_types.types import AEAD, Key,KeyOperation
+from onqlave.keymanager.operations.rsa_ssa_pkcs1_sha_operation import RsaSsaPkcs1Sha2562048KeyOperation
+from onqlave.keymanager.primitives.rsa_ssa_pkcs1_sha import RSASSAPKCS1SHA
 from Crypto.Hash import SHA1,SHA224,SHA256,SHA384,SHA512
 
-from keymanager.onqlave_types.types import Key, KeyOperation
+from onqlave.keymanager.onqlave_types.types import Key, KeyOperation
 class RSASSAPKCS1SHAKeyFactory(KeyFactory):
     """Modelling the RSA-SSA-PKCS1-SHA Key factory
     """

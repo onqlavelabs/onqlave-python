@@ -1,6 +1,6 @@
 from ctypes import c_uint32
-from keymanager.onqlave_types.types import KeyFormat, KeyFactory
-from keymanager.operations.aes_128_gcm_operation import AesGcmKeyFormat
+from onqlave.keymanager.onqlave_types.types import KeyFormat, KeyFactory
+from onqlave.keymanager.operations.aes_128_gcm_operation import AesGcmKeyFormat
 
 class Aes256GcmKeyOperation:
     def __init__(self, key_factory: KeyFactory) -> None:

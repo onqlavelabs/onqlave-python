@@ -5,10 +5,10 @@ import json
 
 from datetime import datetime
 
-from contracts.requests.requests import OnqlaveRequest
-from logger.logger import OnqlaveLogger
+from onqlave.contracts.requests.requests import OnqlaveRequest
+from onqlave.logger.logger import OnqlaveLogger
 
-from messages import messages
+from onqlave.messages import messages
 class RetrySettings:
     """A class for initializing the retry setting, default value is:
     - count = 3

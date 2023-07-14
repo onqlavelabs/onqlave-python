@@ -6,7 +6,7 @@ from Crypto.Cipher import PKCS1_OAEP
 from cryptography.hazmat.primitives.serialization import load_pem_private_key
 from cryptography.hazmat.primitives.asymmetric import rsa,padding
 from cryptography.hazmat.backends import default_backend
-from keymanager.random_service import CSPRNG
+from onqlave.keymanager.random_service import CSPRNG
 class RSASSAPKCS1SHA:
     def __init__(
         self, 

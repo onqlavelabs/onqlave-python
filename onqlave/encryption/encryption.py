@@ -1,29 +1,27 @@
-import logging
-import io
 from datetime import datetime
-# from logger.logger import OnqlaveLogging
-from keymanager.random_service import CSPRNG
-from keymanager.id_service import IDService
-from keymanager.key_manager_client import KeyManager
-from connection.connection import Configuration
-from encryption.options import DebugOption,ArxOption
-from connection.client import RetrySettings
-from credentials.credentials import Credential
+# from onqlave.logger.logger import OnqlaveLogging
+from onqlave.keymanager.random_service import CSPRNG
+from onqlave.keymanager.id_service import IDService
+from onqlave.keymanager.key_manager_client import KeyManager
+from onqlave.connection.connection import Configuration
+from onqlave.encryption.options import DebugOption,ArxOption
+from onqlave.connection.client import RetrySettings
+from onqlave.credentials.credentials import Credential
 
-from encryption.plain_stream_processor import PlainStreamProcessor
-from encryption.encrypted_stream_processor import EncryptedStreamProcessor
+from onqlave.encryption.plain_stream_processor import PlainStreamProcessor
+from onqlave.encryption.encrypted_stream_processor import EncryptedStreamProcessor
 
-from logger.logger import OnqlaveLogger
+from onqlave.logger.logger import OnqlaveLogger
 
-from keymanager.onqlave_types.types import Aesgcm128,Aesgcm256,XChacha20poly1305
-from keymanager.onqlave_types.types import AlgorithmSerialiser, AlgorithmDeserialiser
-from keymanager.factories.aes_gcm_factory import AEADGCMKeyFactory
-from keymanager.factories.xchacha20_poly1305_factory import XChaCha20Poly1305KeyFactory
-from keymanager.operations.aes_128_gcm_operation import AesGcmKeyOperation
-from keymanager.operations.aes_256_gcm_operation import Aes256GcmKeyOperation
-from keymanager.operations.xchacha20_poly1305_operation import XChaCha20Poly1305KeyOperation
+from onqlave.keymanager.onqlave_types.types import Aesgcm128,Aesgcm256,XChacha20poly1305
+from onqlave.keymanager.onqlave_types.types import AlgorithmSerialiser, AlgorithmDeserialiser
+from onqlave.keymanager.factories.aes_gcm_factory import AEADGCMKeyFactory
+from onqlave.keymanager.factories.xchacha20_poly1305_factory import XChaCha20Poly1305KeyFactory
+from onqlave.keymanager.operations.aes_128_gcm_operation import AesGcmKeyOperation
+from onqlave.keymanager.operations.aes_256_gcm_operation import Aes256GcmKeyOperation
+from onqlave.keymanager.operations.xchacha20_poly1305_operation import XChaCha20Poly1305KeyOperation
 
-from messages import messages
+from onqlave.messages import messages
 
 
 class Encryption:

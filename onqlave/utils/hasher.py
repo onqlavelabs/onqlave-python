@@ -2,7 +2,7 @@ import hmac
 import base64
 from hashlib import sha512
 
-from contracts.requests.requests import OnqlaveRequest
+from onqlave.contracts.requests.requests import OnqlaveRequest
 class Hasher:
     def __init__(self) -> None:
         pass

@@ -1,5 +1,5 @@
 from ctypes import c_uint32
-from keymanager.onqlave_types.types import KeyFactory,KeyFormat
+from onqlave.keymanager.onqlave_types.types import KeyFactory,KeyFormat
 
 AESGCMKeyVersion = 0
 

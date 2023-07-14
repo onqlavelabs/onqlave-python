@@ -1,6 +1,6 @@
 from ctypes import c_uint
 
-from contracts.contracts import WrappingKey,EncryptionSecurityModel,DataDecryptionKey,DataEncryptionKey
+from onqlave.contracts.contracts import WrappingKey,EncryptionSecurityModel,DataDecryptionKey,DataEncryptionKey
 
 class BaseErrorResponse:
     def __init__(self) -> None:

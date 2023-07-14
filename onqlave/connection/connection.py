@@ -1,12 +1,12 @@
 import calendar
 from datetime import datetime
 
-from credentials.credentials import Credential
-from connection.client import RetrySettings,Client
-from contracts.requests.requests import OnqlaveRequest
-from logger.logger import OnqlaveLogger
-from messages import messages
-from utils.hasher import Hasher
+from onqlave.credentials.credentials import Credential
+from onqlave.connection.client import RetrySettings,Client
+from onqlave.contracts.requests.requests import OnqlaveRequest
+from onqlave.logger.logger import OnqlaveLogger
+from onqlave.messages import messages
+from onqlave.utils.hasher import Hasher
 
 # A list of header constants
 OnqlaveAPIKey         = "ONQLAVE-API-KEY"

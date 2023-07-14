@@ -1,10 +1,9 @@
 import sys
-import io
 
 from Crypto.Cipher import AES
 
-from keymanager.onqlave_types.types import Key
-from keymanager.random_service import CSPRNG
+from onqlave.keymanager.onqlave_types.types import Key
+from onqlave.keymanager.random_service import CSPRNG
 
 AESGCMIVSize = 12 # aes-gcm init vector size
 AESGCMTagSize = 16 

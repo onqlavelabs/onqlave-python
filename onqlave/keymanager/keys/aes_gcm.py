@@ -1,4 +1,4 @@
-from keymanager.onqlave_types.types import Key, KeyOperation, KeyMaterialType, KeyID, KeyData
+from onqlave.keymanager.onqlave_types.types import Key, KeyOperation, KeyMaterialType, KeyID, KeyData
 
 
 class AesGcmKeyData(KeyData):
