@@ -28,7 +28,6 @@ class XChaCha20Poly1305KeyFactory(KeyFactory):
         )
     
     def primitive(self, key: XChaCha20Poly1305Key):
-        # validate the key
         self.validate_key(key)
         ret = XChaCha20Poly1305AEAD(
             key=key,

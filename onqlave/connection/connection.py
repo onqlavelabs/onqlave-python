@@ -62,10 +62,14 @@ class Connection:
         """
         operation = "Post"
         start = datetime.utcnow()
-        # log the operation
+        
         self._logger.log_debug(messages.CLIENT_OPERATION_STARTED.format(operation))
+        
         url_string = self._configuration._arx_url + "/" + resource
         arx_id = self._configuration._arx_id
+
+        
+        content = body.get_content()
 
         digest = self._hasher.digest(body)
 
@@ -74,7 +78,7 @@ class Connection:
             OnqlaveArx: arx_id,
             OnqlaveHost: self._configuration._arx_url,
             OnqlaveAgent: ServerType,
-            OnqlaveContentLength: str(len(body.get_content())),
+            OnqlaveContentLength: str(len(content)),
             OnqlaveDigest: digest,
             OnqlaveVersion: Version
         }
@@ -88,7 +92,7 @@ class Connection:
             OnqlaveHost: self._configuration._arx_url,
             OnqlaveAgent: ServerType,
             OnqlaveRequestTime:str(calendar.timegm(datetime.utcnow().timetuple())),
-            OnqlaveContentLength: str(len(body.get_content())),
+            OnqlaveContentLength: str(len(content)),
             OnqlaveDigest: digest,
             OnqlaveVersion: Version,
             OnqlaveSignature: signature

@@ -7,7 +7,7 @@ from datetime import datetime
 
 from onqlave.contracts.requests.requests import OnqlaveRequest
 from onqlave.logger.logger import OnqlaveLogger
-
+from errors.errors import OnqlaveError, InvalidCountTimeException, InvalidWaitTimeException, InvalidMaxWaitTimeException
 from onqlave.messages import messages
 class RetrySettings:
     """A class for initializing the retry setting, default value is:
@@ -27,17 +27,29 @@ class RetrySettings:
 
     def _validate_and_get_count_value(self, count: int) -> int:
         if count <= 0:
-            raise Exception # invalid count time
+            raise InvalidCountTimeException(
+                message=messages.INVALID_COUNT_TIME,
+                original_error=None,
+                code=OnqlaveError.InvalidInput
+            )
         return count
     
     def _validate_and_get_wait_time_value(self, wait_time: int) -> int:
         if wait_time <=0:
-            raise Exception # invalid wait time
+            raise InvalidWaitTimeException(
+                message=messages.INVALID_WAIT_TIME,
+                original_error=None,
+                code=OnqlaveError.InvalidInput
+            )
         return wait_time
 
     def _validate_and_get_max_wait_time_value(self, max_wait_time: int) -> int:
         if max_wait_time < 0:
-            raise Exception # invalid max wait time
+            raise InvalidMaxWaitTimeException(
+                message=messages.INVALID_MAX_WAIT_TIME,
+                original_error=None,
+                code=OnqlaveError.InvalidInput
+            )
         return max_wait_time 
 
 class Client:

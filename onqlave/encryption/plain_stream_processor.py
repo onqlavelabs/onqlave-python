@@ -2,6 +2,9 @@ import io
 import struct
 
 from onqlave.keymanager.onqlave_types.types import AlgorithmSerialiser
+from onqlave.errors.errors import OnqlaveError, PlainStreamWriteHeaderException
+from onqlave.messages import messages
+
 class PlainStreamProcessor:
     """A stream processor for the plain stream in the encryption process
     with two function including writing the header and writing the packet.
@@ -31,8 +34,12 @@ class PlainStreamProcessor:
         header = algorithm.serialise()
         try:
             self._cipher_stream.write(header)
-        except Exception as exc:
-            raise exc # need to handle this specifically
+        except Exception:
+            raise PlainStreamWriteHeaderException(
+                message=messages.PLAIN_STREAM_WRITE_HEADER_EXCEPTION,
+                original_error=None,
+                code=OnqlaveError.SdkErrorCode
+            )
         
     
     def write_packet(self, packet: bytearray):
@@ -47,7 +54,6 @@ class PlainStreamProcessor:
         data_len = struct.pack(">I",len(packet))
         try:
             self._cipher_stream.write(data_len)
-             # confirm with Matt to make sure what this means
             self._cipher_stream.write(packet)
         except Exception as exc:
             raise exc
