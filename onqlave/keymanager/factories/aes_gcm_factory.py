@@ -23,7 +23,7 @@ class AEADGCMKeyFactory(KeyFactory):
     def new_key_from_data(self, operation: KeyOperation, key_data: bytearray) -> Key:
         format = operation.get_format()
         if not self.validate_key_format(format):
-            return None # or raise error
+            return None
         return AesGcmKey(
             key_id=self._id_service.new_key_id(),
             operation=operation,

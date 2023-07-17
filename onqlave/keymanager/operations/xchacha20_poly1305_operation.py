@@ -14,7 +14,7 @@ class XChaChaKeyFormat(KeyFormat):
 class XChaCha20Poly1305KeyOperation(KeyOperation):
     def __init__(self, key_factory: KeyFactory) -> None:
         self._factory = key_factory
-        self._format = XChaChaKeyFormat(32,XchaCha20Poly1305KeyVersion) # need to change this 
+        self._format = XChaChaKeyFormat(32,XchaCha20Poly1305KeyVersion)
 
     def get_format(self):
         return self._format

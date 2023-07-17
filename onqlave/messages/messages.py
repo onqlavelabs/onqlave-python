@@ -50,3 +50,23 @@ HTTP_OPERATION_STARTED = "[onqlave] SDK: {} - Http operation started"
 HTTP_OPERATION_SUCCESS = (
     "[onqlave] SDK: {} - Http operation finished successfully: operation took {}"
 )
+
+INVALID_COUNT_TIME = "Invalid count time"
+INVALID_WAIT_TIME = "Invalid wait time"
+INVALID_MAX_WAIT_TIME = "Invalid max wait time"
+
+FETCH_ENCRYPTION_KEY_EXCEPTION = "Fetch encryption key exception"
+FETCH_DECRYPTION_KEY_EXCEPTION = "Fetch decryption key exception"
+OPERATION_MAPPING_EXCEPTION = "Operation mapping exception"
+CREATING_KEY_EXCEPTION = "Creating key exception"
+CREATING_PRIMITIVE_EXCEPTION = "Creating primitive exception"
+UNMARSHALL_KEY_DATA_EXCEPTION = "Unmarshall key data exception"
+UNWRAP_KEY_EXCEPTION = "Unwrap key exception"
+
+RSA_IMPORT_KEY_EXCEPTION = "RSA import key exception"
+RSA_DECRYPT_KEY_EXCEPTION = "RSA decrypt key exception"
+
+PLAIN_STREAM_WRITE_HEADER_EXCEPTION = "Plain stream write header exception"
+
+ALGORITHM_SERIALISING_EXCEPTION = "Algorithm serialising exception"
+INVALID_CIPHER_DATA_EXCEPTION = "Invalid cipher data exception"

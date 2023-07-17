@@ -1,3 +1,4 @@
+import io
 from datetime import datetime
 # from onqlave.logger.logger import OnqlaveLogging
 from onqlave.keymanager.random_service import CSPRNG
@@ -20,7 +21,8 @@ from onqlave.keymanager.factories.xchacha20_poly1305_factory import XChaCha20Pol
 from onqlave.keymanager.operations.aes_128_gcm_operation import AesGcmKeyOperation
 from onqlave.keymanager.operations.aes_256_gcm_operation import Aes256GcmKeyOperation
 from onqlave.keymanager.operations.xchacha20_poly1305_operation import XChaCha20Poly1305KeyOperation
-
+from errors.errors import OnqlaveError, FetchEncryptionKeyException
+from errors.errors import OperationMappingException, CreatingKeyException, CreatingPrimitiveException, FetchDecryptionKeyException, EncryptionOperationException
 from onqlave.messages import messages
 
 
@@ -94,14 +96,34 @@ class Encryption:
             The algorithm & primitive
 
         """
-        # get the edk, dk, algo from Onqlave keymanager
-        edk, dk, algo = self._key_mamanger.fetch_encryption_key()
-        ops = self._operations[algo]
-        
-        factory = ops.get_factory()
-        key = factory.new_key_from_data(ops,dk)
+        edk, dk, algo = self._key_mamanger.fetch_encryption_key()        
+        try:
+            ops = self._operations[algo]
+        except Exception:
+            raise OperationMappingException(
+                message=messages.OPERATION_MAPPING_EXCEPTION,
+                original_error=None,
+                code=OnqlaveError.SdkErrorCode
+            )
 
-        primitive = factory.primitive(key)
+        try:
+            factory = ops.get_factory()
+            key = factory.new_key_from_data(ops,dk)
+        except Exception:
+            raise CreatingKeyException(
+                message=messages.CREATING_KEY_EXCEPTION,
+                original_error=None,
+                code=OnqlaveError.SdkErrorCode
+            )
+        
+        try:
+            primitive = factory.primitive(key)
+        except Exception:
+            raise CreatingPrimitiveException(
+                message=messages.CREATING_PRIMITIVE_EXCEPTION,
+                original_error=None,
+                code=OnqlaveError.SdkErrorCode
+            )
 
         algorithm = AlgorithmSerialiser(version=0,algo=algo,key=edk)
 
@@ -118,23 +140,31 @@ class Encryption:
         Returns:
             The encryption primitive object
         """
-        # get the decryption key
-        # add a try catch here
-
+        
         dk = self._key_mamanger.fetch_decryption_key(algo._key)
-
-        # maybe some try-catch here too
-        ops = self._operations[algo.algorithm()] # modify a little bit compared to the Go SDK
-        factory = ops.get_factory()
-
-        # some try-catch here
-        key = factory.new_key_from_data(ops, dk)
-
-        primitive = factory.primitive(key)
-
+        
+        try:
+            ops = self._operations[algo.algorithm()]
+        except Exception as exc:
+            raise OperationMappingException(
+                messages=messages.OPERATION_MAPPING_EXCEPTION,
+                original_error=None,
+                code=OnqlaveError.SdkErrorCode
+            )
+        
+        try:
+            factory = ops.get_factory()
+            key = factory.new_key_from_data(ops, dk)
+            primitive = factory.primitive(key)
+        except Exception:
+            raise EncryptionOperationException(
+                message=messages.ENCRYPTION_OPERATION_FAILED,
+                original_error=None,
+                code=OnqlaveError.SdkErrorCode
+            )
+        
         return primitive
 
-    # encrypt/decrypt
     def encrypt(self, plaintext: bytearray, associated_data: bytearray) -> bytes:
         """ Encrypt plaintext (as a bytearray) with the combination of associated_data
         regarding to the application of AEAD - Authenticated Encryption with Associated Data
@@ -156,7 +186,7 @@ class Encryption:
         cipher_data = primitive.encrypt(
             plaintext=plaintext,
             associated_data=associated_data 
-        ) # should try-catch error if neccessary
+        )
         
         
         cipher_stream = io.BytesIO()

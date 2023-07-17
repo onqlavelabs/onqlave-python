@@ -3,6 +3,9 @@ import io
 
 from ctypes import c_int32, c_uint32
 
+from onqlave.errors.errors import OnqlaveError, AlgorithmSerialisingException, InvalidCipherDataException
+from onqlave.messages import messages
+
 HashTypeName = {
     0: "UNKNOWN_HASH",
     1: "SHA1",
@@ -205,13 +208,21 @@ class AlgorithmSerialiser():
         Returns:
             an bytearray contains the data related to an algorithm
         """
-        buffer = io.BytesIO()
-        header_len = struct.pack(">I", 7 + len(self._key))
-        buffer.write(header_len)
-        buffer.write(bytes([self._version]))
-        buffer.write(bytes([int.from_bytes(self._algo,byteorder='big')]))
-        buffer.write(bytes([len(self._key)]))
-        buffer.write(self._key)
+        try:
+            buffer = io.BytesIO()
+            header_len = struct.pack(">I", 7 + len(self._key))
+            buffer.write(header_len)
+            buffer.write(bytes([self._version]))
+            buffer.write(bytes([int.from_bytes(self._algo,byteorder='big')]))
+            buffer.write(bytes([len(self._key)]))
+            buffer.write(self._key)
+        except Exception:
+            raise AlgorithmSerialisingException(
+                message=messages.ALGORITHM_SERIALISING_EXCEPTION,
+                original_error=None,
+                code=OnqlaveError.SdkErrorCode
+            )
+
         return buffer.getvalue()
 
 
@@ -236,11 +247,19 @@ class AlgorithmDeserialiser():
             Nothing
         """
         if len(buffer) < 7:
-            raise Exception # invalid cipher data
+            raise InvalidCipherDataException(
+                message=messages.INVALID_CIPHER_DATA_EXCEPTION,
+                original_error=None,
+                code=OnqlaveError.SdkErrorCode
+            )
         
         header_len = int.from_bytes(buffer[:4],'big')
         if len(buffer) < header_len:
-            raise Exception # invalid cipher data
+            raise InvalidCipherDataException(
+                message=messages.INVALID_CIPHER_DATA_EXCEPTION,
+                original_error=None,
+                code=OnqlaveError.SdkErrorCode
+            )
         
         self._version = buffer[4]
         self._algo = buffer[5]
@@ -250,7 +269,7 @@ class AlgorithmDeserialiser():
         
         return header_len
 
-    def key(self) -> bytearray:  # return a bytearray
+    def key(self) -> bytearray: 
         raise NotImplementedError
 
     def version(self) -> bytes:
