@@ -110,6 +110,7 @@ class AESGCMAEAD:
             mode=AES.MODE_GCM,
             nonce=iv
         )
+        cipher.update(assoc_data=associated_data)
 
         plain_text = cipher.decrypt(actual_cipher_text)
         return plain_text
