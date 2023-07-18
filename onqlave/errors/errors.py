@@ -68,6 +68,12 @@ class UnmarshallKeyDataException(OnqlaveException):
 class UnWrapKeyException(OnqlaveException):
     pass
 
+class InvalidKeyException(OnqlaveException):
+    pass
+
+class InvalidPrimitiveException(OnqlaveException):
+    pass
+
 class OperationMappingException(OnqlaveException):
     pass
 
@@ -101,8 +107,9 @@ class EncryptionOperationException(OnqlaveException):
 class PlainStreamWriteHeaderException(OnqlaveException):
     pass
 
-class AlgorithmSerialisingException(OnqlaveException);
+class AlgorithmSerialisingException(OnqlaveException):
     pass
 
 class InvalidCipherDataException(OnqlaveException):
     pass
+
