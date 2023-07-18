@@ -66,13 +66,13 @@ class KeyManager:
         # hasher:
         self._hasher = Hasher()
         self._logger = OnqlaveLogger(debug_option.get_debug_option())
-        self._index = "some value related to the arx url"
+        self._index = ""
         self._config = configuration
         self._http_client = Connection(
             configuration=self._config,
             hasher=self._hasher,
             logger=self._logger,
-        ) 
+        )
         self._rsaSSAPKCS1KeyFactory = RSASSAPKCS1SHAKeyFactory(
             random_service=random_service
         )
