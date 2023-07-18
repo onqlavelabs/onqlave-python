@@ -4,6 +4,8 @@ from Crypto.Cipher import AES
 
 from onqlave.keymanager.onqlave_types.types import Key
 from onqlave.keymanager.random_service import CSPRNG
+from onqlave.errors.errors import OnqlaveError, InvalidKeyException
+from onqlave.messages import messages
 
 AESGCMIVSize = 12 # aes-gcm init vector size
 AESGCMTagSize = 16 
@@ -22,7 +24,11 @@ class AESGCMAEAD:
         self._random_service = random_service
         self._key_value = key.data().get_value()
         if not validate_aes_key_size(len(self._key_value)):
-            raise Exception # should be detailed
+            raise InvalidKeyException(
+                message=messages.INVALID_KEY_EXCEPTION,
+                original_error=None,
+                code=OnqlaveError.SdkErrorCode
+            )
         
         self._prependIV = True
 
@@ -39,7 +45,7 @@ class AESGCMAEAD:
             max_plain_text_size = AESGCMMaxPlaintextSize
         if len(plaintext) > max_plain_text_size:
             raise Exception # plain text size too long
-        # cipher = self.new_cipher()
+        
         cipher = AES.new(
             key=self._key_value,
             mode=AES.MODE_GCM,
@@ -88,14 +94,12 @@ class AESGCMAEAD:
         actual_cipher_text = bytearray()
 
         if self._prependIV:
-            # actual_cipher_text = ciphertext[AESGCMIVSize+AESGCMTagSize:]
             if len(ciphertext) < MinPrependIVCiphertextSize:
                 raise Exception # ciphertext too short
             if iv != ciphertext[:AESGCMIVSize]:
                 raise Exception # unequal IVs:
             actual_cipher_text = ciphertext[AESGCMIVSize:len(ciphertext)-AESGCMTagSize]
         else:
-            # actual_cipher_text = ciphertext[AESGCMTagSize:]
             if len(ciphertext) < MinNoIVCiphertextSize:
                 raise Exception # cipher text too short 
             actual_cipher_text = ciphertext

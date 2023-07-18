@@ -8,7 +8,8 @@ from onqlave.keymanager.id_service import IDService
 from onqlave.keymanager.onqlave_types.types import Key, KeyOperation, KeyMaterialSYMMETRIC
 from onqlave.keymanager.onqlave_types.types import Key
 from onqlave.keymanager.operations.aes_128_gcm_operation import AESGCMKeyVersion
-
+from onqlave.errors.errors import OnqlaveError, InvalidKeyException, InvalidPrimitiveException
+from onqlave.messages import messages
 
 class AEADGCMKeyFactory(KeyFactory):
     """A class to init instances Key factory for the AEADGCM encryption process
@@ -16,12 +17,16 @@ class AEADGCMKeyFactory(KeyFactory):
     def __init__(self, id_service: IDService, random_service: CSPRNG) -> None:
         self._id_service = id_service
         self._random_service = random_service
-        
+
 
     def new_key_from_data(self, operation: KeyOperation, key_data: bytearray) -> Key:
         format = operation.get_format()
         if not self.validate_key_format(format):
-            return None
+            raise InvalidKeyException(
+                message=messages.INVALID_KEY_EXCEPTION,
+                original_error=None,
+                code=OnqlaveError.SdkErrorCode
+            )
         return AesGcmKey(
             key_id=self._id_service.new_key_id(),
             operation=operation,
@@ -60,10 +65,18 @@ class AEADGCMKeyFactory(KeyFactory):
     
     def primitive(self, key: Key) -> any:
         if not self.validate_key(key):
-            return None
+            raise InvalidPrimitiveException(
+                message=messages.CREATING_PRIMITIVE_EXCEPTION,
+                original_error=None,
+                code=OnqlaveError.SdkErrorCode
+            )
         try:
             ret = AESGCMAEAD(key=key,random_service=self._random_service)
-        except Exception as exc:
-            raise exc # invalid primitive data
+        except Exception:
+            raise InvalidPrimitiveException(
+                message=messages.CREATING_PRIMITIVE_EXCEPTION,
+                original_error=None,
+                code=OnqlaveError.SdkErrorCode
+            )
         return ret
         

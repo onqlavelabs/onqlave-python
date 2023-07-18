@@ -61,6 +61,7 @@ OPERATION_MAPPING_EXCEPTION = "Operation mapping exception"
 CREATING_KEY_EXCEPTION = "Creating key exception"
 CREATING_PRIMITIVE_EXCEPTION = "Creating primitive exception"
 
+
 UNMARSHALL_KEY_DATA_EXCEPTION = "Unmarshall key data exception"
 UNWRAP_KEY_EXCEPTION = "Unwrap key exception"
 INVALID_KEY_EXCEPTION = "Invalid key exception"
