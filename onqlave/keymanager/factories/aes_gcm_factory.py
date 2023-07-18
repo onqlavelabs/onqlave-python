@@ -16,9 +16,7 @@ class AEADGCMKeyFactory(KeyFactory):
     def __init__(self, id_service: IDService, random_service: CSPRNG) -> None:
         self._id_service = id_service
         self._random_service = random_service
-
-    def new_key(self,operation: KeyOperation):
-        format = operation.get_format()
+        
 
     def new_key_from_data(self, operation: KeyOperation, key_data: bytearray) -> Key:
         format = operation.get_format()
