@@ -21,8 +21,8 @@ from onqlave.keymanager.factories.xchacha20_poly1305_factory import XChaCha20Pol
 from onqlave.keymanager.operations.aes_128_gcm_operation import AesGcmKeyOperation
 from onqlave.keymanager.operations.aes_256_gcm_operation import Aes256GcmKeyOperation
 from onqlave.keymanager.operations.xchacha20_poly1305_operation import XChaCha20Poly1305KeyOperation
-from errors.errors import OnqlaveError, FetchEncryptionKeyException
-from errors.errors import OperationMappingException, CreatingKeyException, CreatingPrimitiveException, FetchDecryptionKeyException, EncryptionOperationException
+from onqlave.errors.errors import OnqlaveError, FetchEncryptionKeyException
+from onqlave.errors.errors import OperationMappingException, CreatingKeyException, CreatingPrimitiveException, FetchDecryptionKeyException, EncryptionOperationException
 from onqlave.messages import messages
 
 
@@ -198,7 +198,7 @@ class Encryption:
         self._logger.log_debug(messages.ENCRYPTED_OPERATION.format(operation,str(f'{(finish-start).seconds} secs and {(finish-start).microseconds} microsecs')))
         return cipher_stream.getvalue()
 
-    def derypt(self, cipher_data: bytearray, associated_data: bytearray):
+    def decrypt(self, cipher_data: bytearray, associated_data: bytearray):
         """Decrypt data (as a bytearray) under the AEAD
 
         Args:
@@ -275,7 +275,7 @@ class Encryption:
             
 
 
-    def derypt_stream(
+    def decrypt_stream(
             self,
             cipher_stream: io.BytesIO,
             plain_stream: io.BytesIO,

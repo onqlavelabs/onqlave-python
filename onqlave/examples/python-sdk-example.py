@@ -12,7 +12,7 @@ try:
 except ValueError: # Already removed
     pass
 
-from encryption import options
+from onqlave.encryption import options
 from onqlave.encryption.encryption import Encryption
 from onqlave.credentials.credentials import Credential
 from onqlave.connection.client import RetrySettings
@@ -54,7 +54,7 @@ for each_cred in credentials:
     plaintext = "hello world" # your data goes here
     associated_data = "auth" # your authentication data goes here
     cipher_text = encryption_engine.encrypt(plaintext.encode(), associated_data.encode())
-    decrypted_cipher = encryption_engine.derypt(cipher_text,associated_data.encode())
+    decrypted_cipher = encryption_engine.decrypt(cipher_text,associated_data.encode())
     
     # encrypt/decrypt stream example
     plain_file_stream = open("path to your plaintext file","rb")
@@ -65,7 +65,7 @@ for each_cred in credentials:
     cipher_stream.seek(0) # rewind your pointer to the beginning position
 
     decrypted_stream = io.BytesIO()
-    encryption_engine.derypt_stream(
+    encryption_engine.decrypt_stream(
         cipher_stream=cipher_stream,
         plain_stream=decrypted_stream,
         associated_data=associated_data.encode()

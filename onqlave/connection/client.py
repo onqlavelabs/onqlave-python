@@ -7,7 +7,7 @@ from datetime import datetime
 
 from onqlave.contracts.requests.requests import OnqlaveRequest
 from onqlave.logger.logger import OnqlaveLogger
-from errors.errors import OnqlaveError, InvalidCountTimeException, InvalidWaitTimeException, InvalidMaxWaitTimeException
+from onqlave.errors.errors import OnqlaveError, InvalidCountTimeException, InvalidWaitTimeException, InvalidMaxWaitTimeException
 from onqlave.messages import messages
 class RetrySettings:
     """A class for initializing the retry setting, default value is:
