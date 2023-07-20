@@ -35,7 +35,7 @@ pip install onqlave-python-sdk-pilot
 You can also check the [package detail on PyPI](https://pypi.org/project/onqlave-python-sdk-pilot)/
 
 ## Usage
-TO use this SDK, you firstly need to obtain credentials to access an Onqlave Arx by signing up to [Onqlave](https://onqlave.com) and following instruction to create your first Onqlave Arx. Documentation can be found at [Onqlave Technical Documentation](https://docs.onqlave.com).
+To use this SDK, you firstly need to obtain credentials to access an Onqlave Arx by signing up to [Onqlave](https://onqlave.com) and following instruction to create your first Onqlave Arx. Documentation can be found at [Onqlave Technical Documentation](https://docs.onqlave.com).
 
 The [Onqlave Python](https://github.com/onqlavelabs/onqlave-python) module is used to perform operations on the configured Arx such as encrypting and decryptin for an Onqlave Arx. 
 
@@ -57,16 +57,16 @@ credentials = {
 debug_option = options.DebugOption(enable_debug=True)
 arx_option = options.ArxOption(arx_url=credentials['arx_url'])
 credential_option = Credential(
-        access_key=credentials['access_key'],
-        signing_key=credentials['server_signing_key'],
-        secret_key=credentials['server_secret_key'])
+    access_key=credentials['access_key'],
+    signing_key=credentials['server_signing_key'],
+    secret_key=credentials['server_secret_key'])
 retry_option = RetrySettings(count=1,wait_time=1,max_wait_time=2) 
 
 encryption_engine = Encryption(
-        debug_option=debug_option,
-        arx_option=arx_option,
-        credential_option=credential_option,
-        retry_setting=retry_option
+    debug_option=debug_option,
+    arx_option=arx_option,
+    credential_option=credential_option,
+    retry_setting=retry_option
 )
 ```
 
@@ -107,17 +107,17 @@ To decrypt data, use the **decrypt_stream(cipher_stream io.io.BytesIO, plain_str
 ```python
 decrypted_stream = io.BytesIO()
 encryption_engine.decrypt_stream(
-        cipher_stream=cipher_stream,
-        plain_stream=decrypted_stream,
-        associated_data=associated_data.encode()
+    cipher_stream=cipher_stream,
+    plain_stream=decrypted_stream,
+    associated_data=associated_data.encode()
 )
 decrypted_stream.seek(0)
 
 with open(
-        "path to your decrypted file",
-        "wb"
+    "path to your decrypted file",
+    "wb"
 ) as result:
-        result.write(decrypted_stream.read())
+    result.write(decrypted_stream.read())
 ```
 
 ## Reporting a Vulnerability
