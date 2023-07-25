@@ -315,11 +315,9 @@ class Encryption:
         primitive = self.init_decrypt_operation(operation,algo)
         
         while True:
-            try:
-                ciphertext = processor.read_packet()
-            except Exception as exc:
-                self._logger.log_error(message=messages.ENCRYPTED_STREAM_READ_PACKET_EXCEPTION)
-                self._logger.log_error(message=exc)
+            
+            ciphertext = processor.read_packet()
+            if ciphertext is None:
                 break
 
             plain_data = primitive.decrypt(ciphertext, associated_data)

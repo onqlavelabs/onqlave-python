@@ -57,8 +57,10 @@ class EncryptedStreamProcessor:
             A bytearray contains the data in the packet of the cipher stream
         """
         packet_len_buffer = bytearray(4)
-        
-        data_len = self._cipher_stream.readinto(packet_len_buffer)
+        try:
+            data_len = self._cipher_stream.readinto(packet_len_buffer)
+        except Exception:
+            return None
         
         if data_len < 4:
             return None # invalid cipher data
