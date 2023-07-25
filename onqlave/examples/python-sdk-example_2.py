@@ -8,6 +8,7 @@ from onqlave.credentials.credentials import Credential
 from onqlave.connection.client import RetrySettings
 
 
+# This example demonstrates how to use Onqlave python sdk with credentials loaded from CLI args
 def main():
     parser = argparse.ArgumentParser(
         "Python SDK",
@@ -26,9 +27,6 @@ def main():
     server_secret_key = args.server_secret_key
 
     debug_option = options.DebugOption(enable_debug=True) # toggle the debug option
-
-    # for example you want to try several encryption mechanisms, just make a for loop like this
-    # if you just want to stick with 1 encryption mechanisms, simply remove the loop
 
     # init the configuration for the encryption service
     arx_option = options.ArxOption(arx_url=arx_url)
