@@ -187,7 +187,9 @@ class Encryption:
             plaintext=plaintext,
             associated_data=associated_data 
         )
-        
+        if cipher_data is None:
+            self._logger.log_error(message=messages.ENCRYPTION_EXCEPTION)
+            return None
         
         cipher_stream = io.BytesIO()
         processor = PlainStreamProcessor(cipher_stream=cipher_stream)
@@ -217,16 +219,22 @@ class Encryption:
         processor = EncryptedStreamProcessor(cipher_stream)
         # shoul try-catch this command
         algo = processor.read_header()
+        if algo is None:
+            self._logger.log_error(message=messages.ENCRYPTED_STREAM_READ_HEADER_EXCEPTION)
+            return None
 
         # maybe this one need try-catch?
         primitive = self.init_decrypt_operation(operation, algo)
 
-        
-        # this one needs try-catch?
         cipher = processor.read_packet()
+        if cipher is None:
+            self._logger.log_error(message=messages.ENCRYPTED_STREAM_READ_PACKET_EXCEPTION)
+            return None
         
-        # try-catch
         plain_data = primitive.decrypt(cipher, associated_data)
+        if plain_data is None:
+            self._logger.log_error(message=messages.DECRYPTION_EXCEPTION)
+            return None # decryption error
 
         # log a debug line
 
@@ -261,12 +269,15 @@ class Encryption:
         temp_buffer = bytearray(32*1024)
 
         while True:
-            # try-catch
+            
             data_len = plain_stream.readinto(temp_buffer)
             if data_len == 0:
                 break
             
             cipher_text = primitive.encrypt(temp_buffer[:data_len],associated_data)
+            if cipher_text is None:
+                self._logger.log_error(message=messages.ENCRYPTION_EXCEPTION)
+                break
             processor.write_packet(cipher_text)
 
         finish = datetime.utcnow()
@@ -298,15 +309,21 @@ class Encryption:
         processor = EncryptedStreamProcessor(cipher_stream)
         cipher_stream.seek(0)
         algo = processor.read_header()
+        if algo is None:
+            self._logger.log_error(message=messages.ENCRYPTED_STREAM_READ_HEADER_EXCEPTION)
+            return None
         primitive = self.init_decrypt_operation(operation,algo)
         
         while True:
-            try:
-                ciphertext = processor.read_packet()
-            except Exception as exc:
+            
+            ciphertext = processor.read_packet()
+            if ciphertext is None:
                 break
 
             plain_data = primitive.decrypt(ciphertext, associated_data)
+            if plain_data is None:
+                self._logger.log_error(message=messages.DECRYPTION_EXCEPTION)
+                break
 
             plain_stream.write(plain_data)
         finish = datetime.utcnow()
