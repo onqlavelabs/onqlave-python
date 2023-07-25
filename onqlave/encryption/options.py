@@ -1,3 +1,5 @@
+import os
+import json
 import logging 
 
 class DebugOption:
@@ -32,7 +34,7 @@ class DebugOption:
 class ArxOption:
     """A class for modeling the configuration of the Arx-related params in the encryption/decryption request
     """
-    def __init__(self, arx_url: str) -> None:
+    def __init__(self, arx_url: str="") -> None:
         self._arx_url = arx_url
 
     def set_arx_url(self,url:str) -> None:
@@ -41,5 +43,11 @@ class ArxOption:
     def get_arx_url(self) -> str:
         return self._arx_url
     
+    def load_arx_url_from_json(self, json_file_path: str):
+        if not os.path.exists(json_file_path):
+            raise FileNotFoundError
+        with open(json_file_path,"r") as f:
+            credentials = json.load(f)
+            self._arx_url = credentials['arx_url']
 
 

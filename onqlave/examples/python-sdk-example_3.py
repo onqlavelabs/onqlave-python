@@ -7,21 +7,18 @@ from onqlave.credentials.credentials import Credential
 from onqlave.connection.client import RetrySettings
 
 
-# This example demonstrates how to use Onqlave python sdk with credentials loaded from env variables
-access_key = os.getenv('ONQLAVE_PYTHON_SDK_ACCESS_KEY')
-arx_url = os.getenv('ONQLAVE_PYTHON_SDK_ARX_URL')
-server_signing_key = os.getenv('ONQLAVE_PYTHON_SDK_SERVER_SIGNING_KEY')
-server_secret_key = os.getenv('ONQLAVE_PYTHON_SDK_SERVER_SECRET_KEY')
-
+# This example demonstrates how to use Onqlave python sdk with credentials loaded from a JSON file
 debug_option = options.DebugOption(enable_debug=True) # toggle the debug option
 
-# init the configuration for the encryption service
-arx_option = options.ArxOption(arx_url=arx_url)
-credential_option = Credential(
-        access_key=access_key,
-        signing_key=server_signing_key,
-        secret_key=server_secret_key
-    )
+# init the configuration for the encryption service by loading from a json file
+cred_file_path = "credentials.json"
+
+arx_option = options.ArxOption()
+credential_option = Credential()
+
+arx_option.load_arx_url_from_json(cred_file_path)
+credential_option.load_config_from_json(cred_file_path)
+
 retry_option = RetrySettings(count=1,wait_time=1,max_wait_time=2) # retry when server fails
 
 encryption_engine = Encryption( # init an encryption service
