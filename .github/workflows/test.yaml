@@ -1,0 +1,22 @@
+name: Development Build
+on:
+  push:
+    branches:
+      - dev
+
+jobs:
+  build-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checking out the code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.8'
+
+      - name: python version
+        run: |
+          cd onqlave/examples/
+          python python-sdk-example_1.py
