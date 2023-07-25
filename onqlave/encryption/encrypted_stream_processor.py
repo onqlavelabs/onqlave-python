@@ -32,20 +32,16 @@ class EncryptedStreamProcessor:
         data_len = self._cipher_stream.readinto(header_len_buffer)
 
         if data_len < 4:
-            raise Exception # invalid cipher data
+            return None # invalid cipher data
         
         header_len = int.from_bytes(header_len_buffer,byteorder='big')
         header_buffer = bytearray(header_len - 4)
-        # should try catch this command
-        try:
-            data_len = self._cipher_stream.readinto(header_buffer)
-        except Exception as exc:
-            raise exc
+        
+        data_len = self._cipher_stream.readinto(header_buffer)
         
         if data_len < header_len - 4:
-            raise Exception # invalid cipher data
+            return None # invalid cipher data
         
-        # should also try catch this command too
         algorithm = AlgorithmDeserialiser()
         algorithm.deserialise(buffer=header_len_buffer + header_buffer)
 
@@ -61,17 +57,17 @@ class EncryptedStreamProcessor:
             A bytearray contains the data in the packet of the cipher stream
         """
         packet_len_buffer = bytearray(4)
-        # should try catch this command
+        
         data_len = self._cipher_stream.readinto(packet_len_buffer)
         
         if data_len < 4:
-            raise Exception # invalid cipher data
+            return None # invalid cipher data
         
         packet_len = int.from_bytes(packet_len_buffer,'big')
         buffer = bytearray(packet_len)
         data_len = self._cipher_stream.readinto(buffer)
 
         if data_len < int(packet_len):
-            raise Exception # invalid cipher data
+            return None # invalid cipher data
         
         return buffer

@@ -39,12 +39,12 @@ class AESGCMAEAD:
     ):
         iv = self._random_service.get_random_bytes(AESGCMIVSize)
         if len(iv) != AESGCMIVSize:
-            raise Exception # unexpected IV size
+            return None # unexpected IV size
         max_plain_text_size = MaxIntPlainTextSize
         if max_plain_text_size > AESGCMMaxPlaintextSize:
             max_plain_text_size = AESGCMMaxPlaintextSize
         if len(plaintext) > max_plain_text_size:
-            raise Exception # plain text size too long
+            return None # plain text size too long
         
         cipher = AES.new(
             key=self._key_value,
@@ -85,23 +85,23 @@ class AESGCMAEAD:
             The decrypted ciphertext
         """
         if len(ciphertext) < AESGCMIVSize:
-            raise Exception # cipher text too short
+            return None # cipher text too short
         
         iv = ciphertext[:AESGCMIVSize]
         if len(iv) != AESGCMIVSize:
-            raise Exception # unexpected IV Size 
+            return None # unexpected IV Size 
 
         actual_cipher_text = bytearray()
 
         if self._prependIV:
             if len(ciphertext) < MinPrependIVCiphertextSize:
-                raise Exception # ciphertext too short
+                return None # ciphertext too short
             if iv != ciphertext[:AESGCMIVSize]:
-                raise Exception # unequal IVs:
+                return None # unequal IVs:
             actual_cipher_text = ciphertext[AESGCMIVSize:len(ciphertext)-AESGCMTagSize]
         else:
             if len(ciphertext) < MinNoIVCiphertextSize:
-                raise Exception # cipher text too short 
+                return None # cipher text too short 
             actual_cipher_text = ciphertext
 
         # should try-catch
