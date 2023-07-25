@@ -73,3 +73,13 @@ PLAIN_STREAM_WRITE_HEADER_EXCEPTION = "Plain stream write header exception"
 
 ALGORITHM_SERIALISING_EXCEPTION = "Algorithm serialising exception"
 INVALID_CIPHER_DATA_EXCEPTION = "Invalid cipher data exception"
+
+ENCRYPTION_EXCEPTION = "Encryption Exception"
+DECRYPTION_EXCEPTION = "Decryption Exception"
+
+PLAIN_STREAM_READ_PACKET_EXCEPTION = "Plain stream read packet exception"
+PLAIN_STREAM_READ_HEADER_EXCEPTION = "Plain stream read header exception"
+PLAIN_STREAM_WRITE_PACKET_EXCEPTION = "Plain stream write packet exception"
+ENCRYPTED_STREAM_READ_PACKET_EXCEPTION = "Encrypted stream read packet exception"
+ENCRYPTED_STREAM_WRITE_PACKET_EXCEPTION = "Encrypted stream write packet exception"
+ENCRYPTED_STREAM_READ_HEADER_EXCEPTION = "Encrypted read header exception"

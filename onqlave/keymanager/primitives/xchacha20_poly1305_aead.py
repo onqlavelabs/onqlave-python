@@ -16,7 +16,7 @@ class XChaCha20Poly1305AEAD(AEAD):
 
     def encrypt(self, plaintext: bytearray, associated_data: bytearray) -> bytearray:
         if len(plaintext) > MAX_INT - ChaCha20Poly1305NonceSizeX - Poly1305TagSize:
-            raise Exception  # plain_text too long
+            return None  # plain_text too long
         key_data = self._key.data()
         key_value = key_data.get_value()
         nonce = self._random_service.get_random_bytes(24)
