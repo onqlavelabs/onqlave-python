@@ -1,4 +1,4 @@
-These are 2 examples about how to use Onqlave Python SDK:
+These are 3 examples about how to use Onqlave Python SDK:
 
 ## Using env variables
 **python-sdk-example_1.py**
@@ -23,7 +23,6 @@ This example will take command line arguments as inputs to init the encryption s
 - --server_signing_key
 - --server_secret_key
 
-These values are also located in the **credentials.json** file.
 
 How to run:
 ```python
@@ -35,3 +34,7 @@ Before run it, make sure that your installed the python sdk package:
 ```python
 pip install onqlave-python-sdk-pilot
 ```
+
+## Using configuration from JSON file
+**python-sdk-example_3.py**
+This example will take configuration data from a json file. Basically, when developers created APIKey in The Onqlave Platform, they are able to have a copy of the keys in JSON format and it should be saved as a secret json file. To load these configuration, take a look at the code in the provided example.

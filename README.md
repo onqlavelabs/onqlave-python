@@ -32,7 +32,7 @@ To install, simply using this command
 ```bash
 pip install onqlave-python-sdk-pilot
 ```
-You can also check the [package detail on PyPI](https://pypi.org/project/onqlave-python-sdk-pilot)/
+You can also check the [package detail on PyPI](https://pypi.org/project/onqlave-python-sdk-pilot)
 
 ## Usage
 To use this SDK, you firstly need to obtain credentials to access an Onqlave Arx by signing up to [Onqlave](https://onqlave.com) and following instruction to create your first Onqlave Arx. Documentation can be found at [Onqlave Technical Documentation](https://docs.onqlave.com).
@@ -40,6 +40,7 @@ To use this SDK, you firstly need to obtain credentials to access an Onqlave Arx
 The [Onqlave Python](https://github.com/onqlavelabs/onqlave-python) module is used to perform operations on the configured Arx such as encrypting and decryptin for an Onqlave Arx. 
 
 To use this module, an Onqlave client should be initialized as follows.
+(Please note that there are 3 ways of loading configurations specified in the **examples/** directory.)
 
 ```python
 from onqlave.encryption import options
@@ -47,19 +48,14 @@ from onqlave.encryption.encryption import Encryption
 from onqlave.credentials.credentials import Credential
 from onqlave.connection.client import RetrySettings
 
-credentials = {
-    "arx_url":"",
-    "access_key":"",
-    "server_signing_key":"",
-    "server_secret_key":""
-}
+cred_file_path = "credentials.json"
 
-debug_option = options.DebugOption(enable_debug=True)
-arx_option = options.ArxOption(arx_url=credentials['arx_url'])
-credential_option = Credential(
-    access_key=credentials['access_key'],
-    signing_key=credentials['server_signing_key'],
-    secret_key=credentials['server_secret_key'])
+arx_option = options.ArxOption()
+credential_option = Credential()
+
+arx_option.load_arx_url_from_json(cred_file_path)
+credential_option.load_config_from_json(cred_file_path)
+
 retry_option = RetrySettings(count=1,wait_time=1,max_wait_time=2) 
 
 encryption_engine = Encryption(
