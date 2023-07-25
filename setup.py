@@ -4,8 +4,8 @@ with open('requirements.txt', 'r') as f:
     requirements = f.read().splitlines()
 
 setup(
-    name='onqlave-python-sdk',
-    version='0.0.1',
+    name='onqlave-python-sdk-pilot',
+    version='0.0.15',
     author='Onqlave Pty',
     author_email='dc@onqlave.com',
     description='A SDK to use the encryption service provided by The Onqlave Platform',
