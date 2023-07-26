@@ -2,8 +2,13 @@ name: Development Build
 on:
   push:
     branches:
-      - dev
+      - feat/automation_test_sdk
 
+env:
+  ONQLAVE_PYTHON_SDK_ACCESS_KEY: ${{ secrets.ONQLAVE_PYTHON_SDK_ACCESS_KEY_DEV }}
+  ONQLAVE_PYTHON_SDK_ARX_URL: ${{ secrets.ONQLAVE_PYTHON_SDK_ARX_URL_DEV }}
+  ONQLAVE_PYTHON_SDK_SERVER_SIGNING_KEY: ${{ secrets.ONQLAVE_PYTHON_SDK_SERVER_SIGNING_KEY_DEV }}
+  ONQLAVE_PYTHON_SDK_SERVER_SECRET_KEY: ${{ secrets.ONQLAVE_PYTHON_SDK_SERVER_SECRET_KEY_DEV }}
 jobs:
   build-test:
     runs-on: ubuntu-latest
