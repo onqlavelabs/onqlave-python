@@ -21,7 +21,7 @@ jobs:
         with:
           python-version: '3.8'
 
-      - name: python version
+      - name: Run automation test SDK
         run: |
           cd onqlave/examples/
           pip install onqlave-python-sdk-pilot
