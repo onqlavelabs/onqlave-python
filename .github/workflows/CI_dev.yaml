@@ -24,4 +24,5 @@ jobs:
       - name: python version
         run: |
           cd onqlave/examples/
+          pip install onqlave-python-sdk-pilot
           python python-sdk-example_1.py
