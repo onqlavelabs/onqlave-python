@@ -1,6 +1,9 @@
 # Description
 This Python SDK is designed to help developers easily integrate Onqlave `Encryption As A Service` into their python backend.
 
+
+[![License](https://img.shields.io/github/license/onqlavelabs/onqlave-go)](https://github.com/onqlavelabs/onqlave-go/blob/main/LICENSE)
+
 # Table of Contents
 
 - [Description](#description)
