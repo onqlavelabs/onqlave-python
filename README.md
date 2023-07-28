@@ -4,6 +4,7 @@ This Python SDK is designed to help developers easily integrate Onqlave `Encrypt
 
 [![License](https://img.shields.io/github/license/onqlavelabs/onqlave-go)](https://github.com/onqlavelabs/onqlave-go/blob/main/LICENSE)
 
+
 # Table of Contents
 
 - [Description](#description)
@@ -30,7 +31,7 @@ This Python SDK is designed to help developers easily integrate Onqlave `Encrypt
 - Python 3.8 and above
 
 ### Configuration
-To install, simply using this command
+To install, simply using this command:
 
 ```bash
 pip install onqlave-python-sdk-pilot
