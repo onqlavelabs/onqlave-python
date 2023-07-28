@@ -1,0 +1,28 @@
+name: Development Build
+on:
+  push:
+    branches:
+      - feat/automation_test_sdk
+
+env:
+  ONQLAVE_PYTHON_SDK_ACCESS_KEY: ${{ secrets.ONQLAVE_PYTHON_SDK_ACCESS_KEY_DEV }}
+  ONQLAVE_PYTHON_SDK_ARX_URL: ${{ secrets.ONQLAVE_PYTHON_SDK_ARX_URL_DEV }}
+  ONQLAVE_PYTHON_SDK_SERVER_SIGNING_KEY: ${{ secrets.ONQLAVE_PYTHON_SDK_SERVER_SIGNING_KEY_DEV }}
+  ONQLAVE_PYTHON_SDK_SERVER_SECRET_KEY: ${{ secrets.ONQLAVE_PYTHON_SDK_SERVER_SECRET_KEY_DEV }}
+jobs:
+  build-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checking out the code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.8'
+
+      - name: Run automation test SDK
+        run: |
+          cd onqlave/examples/
+          pip install onqlave-python-sdk-pilot
+          python python-sdk-example_1.py
