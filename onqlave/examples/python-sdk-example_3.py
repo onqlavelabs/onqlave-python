@@ -1,6 +1,5 @@
 
 import io
-import os
 from onqlave.encryption import options
 from onqlave.encryption.encryption import Encryption
 from onqlave.credentials.credentials import Credential

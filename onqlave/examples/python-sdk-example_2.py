@@ -1,6 +1,5 @@
 
 import io
-import os
 import argparse
 from onqlave.encryption import options
 from onqlave.encryption.encryption import Encryption
