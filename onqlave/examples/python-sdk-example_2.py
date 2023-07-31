@@ -48,7 +48,8 @@ def main():
     associated_data = "auth" # your authentication data goes here
     cipher_text = encryption_engine.encrypt(plaintext.encode(), associated_data.encode())
     decrypted_cipher = encryption_engine.decrypt(cipher_text,associated_data.encode())
-        
+    if not decrypted_cipher.decode() == plaintext:
+        raise Exception
         # encrypt/decrypt stream example
     plain_file_stream = open("plaintext.txt","rb")
     plain_stream = io.BytesIO(plain_file_stream.read())
@@ -66,10 +67,19 @@ def main():
     decrypted_stream.seek(0)
 
     with open(
-            "path to your decrypted file",
+            "decrypted.txt",
             "wb"
     ) as result:
         result.write(decrypted_stream.read())
+    plaintext_in_stream = None
+    decrypted_text_in_stream = None
+    with open("decrypted.txt","r") as f:
+        decrypted_text_in_stream = f.readline()
+    with open("plaintext.txt","r") as f:
+        plaintext_in_stream = f.readline()
+
+    if not plaintext_in_stream == decrypted_text_in_stream:
+        raise Exception
 
 if __name__ == '__main__':
     main()
