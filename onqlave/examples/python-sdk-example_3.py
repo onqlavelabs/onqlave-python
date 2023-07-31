@@ -32,7 +32,10 @@ plaintext = "hello world" # your data goes here
 associated_data = "auth" # your authentication data goes here
 cipher_text = encryption_engine.encrypt(plaintext.encode(), associated_data.encode())
 decrypted_cipher = encryption_engine.decrypt(cipher_text,associated_data.encode())
-    
+if not decrypted_cipher.decode() == plaintext:
+    print("Encrypt/decrypt FAILED")
+    raise Exception # encrypt/decrypt FAILED
+print("Encrypt/decrypt OK")
     # encrypt/decrypt stream example
 plain_file_stream = open("plaintext.txt","rb")
 plain_stream = io.BytesIO(plain_file_stream.read())
@@ -50,7 +53,19 @@ encryption_engine.decrypt_stream(
 decrypted_stream.seek(0)
 
 with open(
-        "path to your decrypted file",
+        "decrypted.txt",
         "wb"
 ) as result:
     result.write(decrypted_stream.read())
+
+plaintext_in_stream = None
+decrypted_text_in_stream = None
+with open("decrypted.txt","r") as f:
+    decrypted_text_in_stream = f.readline()
+with open("plaintext.txt","r") as f:
+    plaintext_in_stream = f.readline()
+
+if not plaintext_in_stream == decrypted_text_in_stream:
+    print("Encrypt/decrypt stream FAILED")
+    raise Exception # encrypt/decrypt stream FAILED
+print("Encrypt/decrypt stream OK")
