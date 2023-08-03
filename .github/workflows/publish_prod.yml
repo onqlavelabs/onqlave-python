@@ -61,3 +61,18 @@ jobs:
           password: ${{ secrets.PYPI_TOKEN_PROD }}
           package_glob: dist/*.whl dist/*.tar.gz
           skip_existing: true
+
+      ############# GITHUB RELEASE ##############
+      - name: Extract release notes
+        id: extract-release-notes
+        uses: ffurrer2/extract-release-notes@v1
+
+
+      - name: "Create a GitHub release v${{ steps.extract_tag.outputs.tag }}"
+        uses: ncipollo/release-action@v1
+        with:
+          tag: "v${{ steps.extract_tag.outputs.tag }}"
+          name: "Release v${{ steps.extract_tag.outputs.tag }}"
+          body: |
+            ## Release notes:
+            ${{ steps.extract-release-notes.outputs.release_notes }}
