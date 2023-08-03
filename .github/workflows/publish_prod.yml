@@ -41,6 +41,13 @@ jobs:
         run: |
           sed -i "s/version='.*'/version='${{ steps.extract_tag.outputs.tag }}'/g" setup.py
 
+      # package_name = 'onqlave-python'
+      - name: "Update python package name"
+        env:
+          PACKAGE_NAME: ${{ secrets.PACKAGE_NAME_DEV }}
+        run: |
+          sed -i "s/package_name = '.*'/package_name = '${{ env.PACKAGE_NAME }}'/g" setup.py
+
       # build python package with setup.py
       - name: "Build package"
         run: |
