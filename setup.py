@@ -7,8 +7,11 @@ from pathlib import Path
 this_directory = Path(__file__).parent
 long_description = (this_directory / "README.md").read_text()
 
+package_name = 'onqlave-python'
+download_url = format('https://pypi.org/project/%s/#history' % package_name)
+
 setup(
-    name='onqlave-python-sdk-pilot',
+    name=package_name,
     version='0.0.21',
     author='Onqlave Pty',
     author_email='product@onqlave.com',
@@ -18,7 +21,7 @@ setup(
     long_description=long_description,
     long_description_content_type='text/markdown',
     url='https://github.com/onqlavelabs/onqlave-python/tree/dev', 
-    download_url='https://pypi.org/project/onqlave-python-sdk-pilot/#history',
+    download_url=download_url,
     packages=find_packages(),
     classifiers=[
         'Development Status :: 3 - Alpha',
