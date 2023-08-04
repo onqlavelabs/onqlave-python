@@ -1,8 +1,9 @@
 # Description
 This Python SDK is designed to help developers easily integrate Onqlave `Encryption As A Service` into their python backend.
 
-
-[![License](https://img.shields.io/github/license/onqlavelabs/onqlave-go)](https://github.com/onqlavelabs/onqlave-go/blob/main/LICENSE)
+[![CI](https://img.shields.io/static/v1?label=CI&message=passing&color=green?style=plastic&logo=github)](https://github.com/onqlavelabs/onqlave-python/actions)
+[![GitHub release](https://img.shields.io/github/v/release/onqlavelabs/onqlave-go.svg)](https://github.com/onqlavelabs/onqlave-python/releases)
+[![License](https://img.shields.io/github/license/onqlavelabs/onqlave-python)](https://github.com/onqlavelabs/onqlave-python/blob/main/LICENSE)
 
 
 # Table of Contents
@@ -36,7 +37,7 @@ To install, simply using this command:
 ```bash
 pip install onqlave-python-sdk-pilot
 ```
-You can also check the [package detail on PyPI](https://pypi.org/project/onqlave-python-sdk-pilot)
+You can also check the [package detail on PyPI](https://pypi.org/project/onqlave-python)
 
 ## Usage
 To use this SDK, you firstly need to obtain credentials to access an Onqlave Arx by signing up to [Onqlave](https://onqlave.com) and following instruction to create your first Onqlave Arx. Documentation can be found at [Onqlave Technical Documentation](https://docs.onqlave.com).
