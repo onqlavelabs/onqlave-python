@@ -12,7 +12,7 @@ download_url = format('https://pypi.org/project/%s/#history' % package_name)
 
 setup(
     name=package_name,
-    version='0.0.21',
+    version='0.0.1',
     author='Onqlave Pty',
     author_email='product@onqlave.com',
     maintainer='DC',
@@ -20,7 +20,7 @@ setup(
     description='This Python SDK is designed to help developers easily integrate Onqlave Encryption As A Service into their python backend.',
     long_description=long_description,
     long_description_content_type='text/markdown',
-    url='https://github.com/onqlavelabs/onqlave-python/tree/dev', 
+    url='https://github.com/onqlavelabs/onqlave-python/', 
     download_url=download_url,
     packages=find_packages(),
     classifiers=[
@@ -40,7 +40,7 @@ setup(
     project_urls = {
         "Home Page":"https://www.onqlave.com/",
         "Issue Tracker": "https://github.com/onqlavelabs/onqlave-python/issues",
-        "Source Code": "https://github.com/onqlavelabs/onqlave-python/tree/dev",
+        "Source Code": "https://github.com/onqlavelabs/onqlave-python/",
         
     },
 
