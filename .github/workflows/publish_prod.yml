@@ -44,7 +44,7 @@ jobs:
       # package_name = 'onqlave-python'
       - name: "Update python package name"
         env:
-          PACKAGE_NAME: ${{ secrets.PACKAGE_NAME_DEV }}
+          PACKAGE_NAME: ${{ secrets.PACKAGE_NAME_PROD }}
         run: |
           sed -i "s/package_name = '.*'/package_name = '${{ env.PACKAGE_NAME }}'/g" setup.py
 
