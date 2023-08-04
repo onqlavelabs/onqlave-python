@@ -34,7 +34,7 @@ This Python SDK is designed to help developers easily integrate Onqlave `Encrypt
 To install, simply using this command:
 
 ```bash
-pip install onqlave-python-sdk-pilot
+pip install onqlave-python
 ```
 You can also check the [package detail on PyPI](https://pypi.org/project/onqlave-python)
 
