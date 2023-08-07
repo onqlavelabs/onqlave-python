@@ -12,7 +12,7 @@ download_url = format('https://pypi.org/project/%s/#history' % package_name)
 
 setup(
     name=package_name,
-    version='0.1.2',
+    version='0.1.3',
     author='Onqlave Pty',
     author_email='product@onqlave.com',
     maintainer='DC',
