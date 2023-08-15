@@ -1,4 +1,4 @@
-name: Development Build
+name: Development Test
 on:
   pull_request:
     branches: [ dev ]
