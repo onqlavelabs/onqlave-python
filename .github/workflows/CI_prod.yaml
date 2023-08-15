@@ -1,0 +1,43 @@
+name: Production Test
+on:
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checking out the code
+        uses: actions/checkout@v3
+
+      - name: "Set up Python"
+        uses: actions/setup-python@v3
+        with:
+          python-version: '3.9'
+
+      - name: Install SDK
+        run: |
+          pip install .
+      
+      - name: Install pytest
+        run: |
+          pip install pytest
+
+      - name: Run automation test SDK
+        run: |
+          pytest test/test_encryption.py -v
+        env:
+            AES_128_ACCESS_KEY: ${{ secrets.AES_128_ACCESS_KEY_PROD }}
+            AES_128_ARX_URL: ${{ secrets.AES_128_ARX_URL_PROD }}
+            AES_128_SIGNING_KEY: ${{ secrets.AES_128_SIGNING_KEY_PROD }}
+            AES_128_SECRET_KEY: ${{ secrets.AES_128_SECRET_KEY_PROD }}
+  
+            AES_256_ACCESS_KEY: ${{ secrets.AES_256_ACCESS_KEY_PROD }}
+            AES_256_ARX_URL: ${{ secrets.AES_256_ARX_URL_PROD }}
+            AES_256_SIGNING_KEY: ${{ secrets.AES_256_SIGNING_KEY_PROD }}
+            AES_256_SECRET_KEY: ${{ secrets.AES_256_SECRET_KEY_PROD }}
+  
+            XCHACHA_ACCESS_KEY: ${{ secrets.XCHACHA_ACCESS_KEY_PROD }}
+            XCHACHA_ARX_URL: ${{ secrets.XCHACHA_ARX_URL_PROD }}
+            XCHACHA_SIGNING_KEY: ${{ secrets.XCHACHA_SIGNING_KEY_PROD }}
+            XCHACHA_SECRET_KEY: ${{ secrets.XCHACHA_SECRET_KEY_PROD }}

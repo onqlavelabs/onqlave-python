@@ -51,7 +51,7 @@ jobs:
       # build python package with setup.py
       - name: "Build package"
         run: |
-          python setup.py sdist bdist_wheel
+          python setup.py sdist bdist_wheel      
 
       # publish python package to pypi
       - name: "Publish package"
