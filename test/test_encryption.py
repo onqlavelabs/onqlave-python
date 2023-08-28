@@ -74,7 +74,9 @@ def compare_encrypted_decrypted_stream(encryption_engine):
 
 def compare_flow(access_key, arx_url, server_signing_key, server_secret_key):
     if not access_key or not arx_url or not server_signing_key or not server_secret_key:
-        raise Exception('Missing environment variables')
+        # skip test if the environment variables are not set
+        pytest.skip("Environment variables are not set")
+        
     encryption_engine = encrypt_engine(access_key, arx_url, server_signing_key, server_secret_key)
     compare_encrypted_decrypted_text(encryption_engine)
     compare_encrypted_decrypted_stream(encryption_engine)
